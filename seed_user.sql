@@ -170,28 +170,26 @@ ALTER TABLE public.medical_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lab_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.prescriptions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Public all medical_history" ON public.medical_history;
 DROP POLICY IF EXISTS "Public read medical_history" ON public.medical_history;
-CREATE POLICY "Public read medical_history" ON public.medical_history FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public insert medical_history" ON public.medical_history;
-CREATE POLICY "Public insert medical_history" ON public.medical_history FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Public delete medical_history" ON public.medical_history;
-CREATE POLICY "Public delete medical_history" ON public.medical_history FOR DELETE USING (true);
-DROP POLICY IF EXISTS "Public update medical_history" ON public.medical_history FOR UPDATE USING (true);
+DROP POLICY IF EXISTS "Public update medical_history" ON public.medical_history;
+CREATE POLICY "Public all medical_history" ON public.medical_history FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Public all lab_results" ON public.lab_results;
 DROP POLICY IF EXISTS "Public read lab_results" ON public.lab_results;
-CREATE POLICY "Public read lab_results" ON public.lab_results FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public insert lab_results" ON public.lab_results;
-CREATE POLICY "Public insert lab_results" ON public.lab_results FOR INSERT WITH CHECK (true);
-DROP POLICY IF EXISTS "Public delete lab_results" ON public.lab_results FOR DELETE USING (true);
-DROP POLICY IF EXISTS "Public update lab_results" ON public.lab_results FOR UPDATE USING (true);
+DROP POLICY IF EXISTS "Public delete lab_results" ON public.lab_results;
+DROP POLICY IF EXISTS "Public update lab_results" ON public.lab_results;
+CREATE POLICY "Public all lab_results" ON public.lab_results FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Public all prescriptions" ON public.prescriptions;
 DROP POLICY IF EXISTS "Public read prescriptions" ON public.prescriptions;
-CREATE POLICY "Public read prescriptions" ON public.prescriptions FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public insert prescriptions" ON public.prescriptions;
-CREATE POLICY "Public insert prescriptions" ON public.prescriptions FOR INSERT WITH CHECK (true);
 DROP POLICY IF EXISTS "Public delete prescriptions" ON public.prescriptions;
-CREATE POLICY "Public delete prescriptions" ON public.prescriptions FOR DELETE USING (true);
-DROP POLICY IF EXISTS "Public update prescriptions" ON public.prescriptions FOR UPDATE USING (true);
+DROP POLICY IF EXISTS "Public update prescriptions" ON public.prescriptions;
+CREATE POLICY "Public all prescriptions" ON public.prescriptions FOR ALL USING (true) WITH CHECK (true);
 
 -- =========================================================================
 -- BƯỚC 2: TẠO TÀI KHOẢN VÀ NẠP HỒ SƠ BỆNH ÁN
