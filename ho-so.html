@@ -993,6 +993,20 @@
         <!-- Rendered dynamically via js/app.js -->
       </ul>
     </div>
+    <div class="mobile-drawer-footer">
+      <div class="header-auth-trigger-wrap mb-2">
+        <button class="open-auth-modal-btn" data-tab="login" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+          <i class="ri-user-3-line"></i>
+          <span>Đăng nhập / Đăng ký</span>
+        </button>
+      </div>
+      <a href="tel:18009415" class="mobile-drawer-hotline">
+        <i class="ri-phone-line me-1"></i> Hotline: 1800 9415
+      </a>
+      <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="btn-header-book" style="width: 100%; justify-content: center;">
+        <i class="ri-calendar-check-line"></i> Đặt lịch khám Zalo
+      </a>
+    </div>
   </div>
 
   <!-- ========================================================================
@@ -1937,13 +1951,13 @@
         btn2?.classList.remove('active');
         if (img1) img1.style.display = 'block';
         if (img2) img2.style.display = 'none';
-        if (btnOpenTab) btnOpenTab.href = '/public/anhcuabacsiDaoVanTri1.png';
+        if (btnOpenTab) btnOpenTab.href = '/public/anhcuabacsiDaoVanTri1.png?v=2';
       } else {
         btn2?.classList.add('active');
         btn1?.classList.remove('active');
         if (img1) img1.style.display = 'none';
         if (img2) img2.style.display = 'block';
-        if (btnOpenTab) btnOpenTab.href = '/public/anhcuabacsiDaoVanTri2.png';
+        if (btnOpenTab) btnOpenTab.href = '/public/anhcuabacsiDaoVanTri2.png?v=2';
       }
     }
 
@@ -1966,8 +1980,8 @@
               </span>
             </div>
             <div class="pacs-viewer-frame">
-              <img src="/public/anhcuabacsiTaThiHa.png"
-                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiTaThiHa.png';}"
+              <img src="/public/anhcuabacsiTaThiHa.png?v=2"
+                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiTaThiHa.png?v=2';}"
                    alt="Siêu âm ổ bụng - BS Tạ Thị Hà"
                    class="pacs-img-preview" />
             </div>
@@ -1975,7 +1989,7 @@
               <span style="color: #16a34a; font-size: 0.88rem; font-weight: 600;">
                 <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Đã đồng bộ & xác thực từ máy siêu âm SAMSUNG
               </span>
-              <a href="/public/anhcuabacsiTaThiHa.png" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
+              <a href="/public/anhcuabacsiTaThiHa.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
                 <i class="ri-external-link-line"></i> Mở ảnh gốc kích thước lớn
               </a>
             </div>
@@ -1993,8 +2007,8 @@
               </span>
             </div>
             <div class="pacs-viewer-frame">
-              <img src="/public/anhcuabacsiLoThiXuan.png"
-                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiLoThiXuan.png';}"
+              <img src="/public/anhcuabacsiLoThiXuan.png?v=2"
+                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiLoThiXuan.png?v=2';}"
                    alt="Nội soi Tai Mũi Họng - BS Lò Thị Xuân"
                    class="pacs-img-preview" />
             </div>
@@ -2002,7 +2016,7 @@
               <span style="color: #16a34a; font-size: 0.88rem; font-weight: 600;">
                 <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Máy nội soi HD Pentax Medical
               </span>
-              <a href="/public/anhcuabacsiLoThiXuan.png" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
+              <a href="/public/anhcuabacsiLoThiXuan.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
                 <i class="ri-external-link-line"></i> Mở ảnh gốc kích thước lớn
               </a>
             </div>
@@ -2030,13 +2044,13 @@
             </div>
             <div class="pacs-viewer-frame">
               <img id="imgXray1"
-                   src="/public/anhcuabacsiDaoVanTri1.png"
-                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiDaoVanTri1.png';}"
+                   src="/public/anhcuabacsiDaoVanTri1.png?v=2"
+                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiDaoVanTri1.png?v=2';}"
                    alt="Phim chụp X-Quang ngực thẳng - BS Đào Văn Trí"
                    class="pacs-img-preview" />
               <img id="imgXray2"
-                   src="/public/anhcuabacsiDaoVanTri2.png"
-                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiDaoVanTri2.png';}"
+                   src="/public/anhcuabacsiDaoVanTri2.png?v=2"
+                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiDaoVanTri2.png?v=2';}"
                    alt="Phiếu kết quả X-Quang có chữ ký - BS Đào Văn Trí"
                    class="pacs-img-preview"
                    style="display: none;" />
@@ -2045,7 +2059,7 @@
               <span style="color: #16a34a; font-size: 0.88rem; font-weight: 600;">
                 <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Phim số hóa chuẩn DICOM BVĐK Hùng Vương
               </span>
-              <a id="btnOpenFullImage" href="/public/anhcuabacsiDaoVanTri1.png" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
+              <a id="btnOpenFullImage" href="/public/anhcuabacsiDaoVanTri1.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
                 <i class="ri-external-link-line"></i> Mở ảnh gốc kích thước lớn
               </a>
             </div>

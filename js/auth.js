@@ -416,6 +416,7 @@
 
   window.toggleUserDropdown = function (el) {
     const parent = el.closest('.user-logged-box');
+    parent?.classList.toggle('active');
     const menu = parent?.querySelector('.user-dropdown-menu');
     menu?.classList.toggle('active');
   };
@@ -423,6 +424,7 @@
   document.addEventListener('click', e => {
     if (!e.target.closest('.user-logged-box')) {
       document.querySelectorAll('.user-dropdown-menu').forEach(m => m.classList.remove('active'));
+      document.querySelectorAll('.user-logged-box').forEach(b => b.classList.remove('active'));
     }
   });
 
