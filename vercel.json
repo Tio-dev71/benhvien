@@ -1,4 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "rewrites": [
     {
@@ -8,6 +10,10 @@
     {
       "source": "/ho-so-suc-khoe",
       "destination": "/ho-so.html"
+    },
+    {
+      "source": "/anhcuabacsi:path*",
+      "destination": "/public/anhcuabacsi:path*"
     }
   ]
 }
