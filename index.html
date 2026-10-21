@@ -82,6 +82,14 @@
 
       <!-- Action Buttons -->
       <div class="header-actions">
+        <!-- Auth Button / User Profile -->
+        <div class="header-auth-trigger-wrap">
+          <button class="open-auth-modal-btn" data-tab="login">
+            <i class="ri-user-3-line"></i>
+            <span>Đăng nhập</span>
+          </button>
+        </div>
+
         <a href="tel:18009415" class="btn-header-call">
           <i class="ri-phone-line"></i>
           <span>1800 9415</span>
@@ -153,6 +161,12 @@
       </ul>
     </div>
     <div class="mobile-drawer-footer">
+      <div class="header-auth-trigger-wrap mb-2">
+        <button class="open-auth-modal-btn" data-tab="login" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+          <i class="ri-user-3-line"></i>
+          <span>Đăng nhập / Đăng ký</span>
+        </button>
+      </div>
       <a href="tel:18009415" class="mobile-drawer-hotline">
         <i class="ri-phone-line me-1"></i> Hotline: 1800 9415
       </a>
@@ -572,8 +586,107 @@
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 
+  <!-- ========================================================================
+       SUPABASE PHONE AUTH MODAL (ĐĂNG NHẬP / ĐĂNG KÝ)
+       ======================================================================== -->
+  <div class="auth-modal-backdrop" id="authModalBackdrop"></div>
+  <div class="auth-modal" id="authModal">
+    <div class="auth-modal-header">
+      <button class="auth-modal-close" id="closeAuthModalBtn" aria-label="Đóng">
+        <i class="ri-close-line"></i>
+      </button>
+      <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo" class="auth-brand-logo" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+      <h3 class="auth-modal-title">CỔNG BỆNH NHÂN</h3>
+      <p class="auth-modal-subtitle">Bệnh viện Đa khoa Hùng Vương - Chăm sóc tận tâm</p>
+    </div>
+
+    <!-- Tabs: Đăng nhập vs Đăng ký -->
+    <div class="auth-tabs">
+      <div class="auth-tab-btn active" id="authTabLogin">ĐĂNG NHẬP</div>
+      <div class="auth-tab-btn" id="authTabRegister">ĐĂNG KÝ</div>
+    </div>
+
+    <div class="auth-modal-body">
+      <!-- Alert message box -->
+      <div class="auth-alert" id="authAlertBox"></div>
+
+      <!-- Form 1: Đăng nhập -->
+      <form id="authFormLogin">
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="loginPhone">Số điện thoại</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-phone-line auth-input-icon"></i>
+            <input type="tel" id="loginPhone" class="auth-form-input" placeholder="Ví dụ: 0913 529 115" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="loginPassword">Mật khẩu</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-lock-2-line auth-input-icon"></i>
+            <input type="password" id="loginPassword" class="auth-form-input" placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+            <button type="button" class="toggle-password-btn" data-target="loginPassword" aria-label="Ẩn/hiện mật khẩu">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn" id="btnLoginSubmit">
+          Đăng nhập ngay
+        </button>
+      </form>
+
+      <!-- Form 2: Đăng ký -->
+      <form id="authFormRegister" style="display: none;">
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regName">Họ và tên người bệnh</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-user-line auth-input-icon"></i>
+            <input type="text" id="regName" class="auth-form-input" placeholder="Ví dụ: Nguyễn Văn A" required>
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regPhone">Số điện thoại</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-phone-line auth-input-icon"></i>
+            <input type="tel" id="regPhone" class="auth-form-input" placeholder="Ví dụ: 0913 529 115" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regPassword">Mật khẩu</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-lock-2-line auth-input-icon"></i>
+            <input type="password" id="regPassword" class="auth-form-input" placeholder="Tối thiểu 6 ký tự..." required autocomplete="new-password">
+            <button type="button" class="toggle-password-btn" data-target="regPassword" aria-label="Ẩn/hiện mật khẩu">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regConfirmPassword">Xác nhận mật khẩu</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-shield-check-line auth-input-icon"></i>
+            <input type="password" id="regConfirmPassword" class="auth-form-input" placeholder="Nhập lại mật khẩu..." required autocomplete="new-password">
+            <button type="button" class="toggle-password-btn" data-target="regConfirmPassword" aria-label="Ẩn/hiện mật khẩu">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn" id="btnRegisterSubmit">
+          Tạo tài khoản
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

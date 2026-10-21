@@ -260,12 +260,15 @@
   </footer>
 
   <script>
-    // Display the current requested path nicely
+    // Redirect to original domain
     document.addEventListener('DOMContentLoaded', function() {
       const path = window.location.pathname;
       const textEl = document.getElementById('currentPathText');
       if (textEl) {
         textEl.textContent = path && path !== '/' ? decodeURIComponent(path) : '/chuyen-muc-dang-phat-trien';
+      }
+      if (path && !path.includes('development.html') && path !== '/') {
+        window.location.replace('https://benhvienhungvuong.vn' + path);
       }
     });
   </script>

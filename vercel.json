@@ -1,0 +1,13 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/ho-so",
+      "destination": "/ho-so.html"
+    },
+    {
+      "source": "/ho-so-suc-khoe",
+      "destination": "/ho-so.html"
+    }
+  ]
+}

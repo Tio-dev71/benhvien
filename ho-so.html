@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ sức khỏe điện tử - Bệnh viện Đa khoa Hùng Vương</title>
+  <link rel="icon" type="image/png" href="https://benhvienhungvuong.vn/favicon.png">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icon Libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* =========================================================================
+       PATIENT PORTAL & HEALTH PROFILE STYLES (LIGHT CLINICAL THEME)
+       ========================================================================= */
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .hoso-page-container {
+      background: #f8fafc;
+      min-height: calc(100vh - 350px);
+      padding: 24px 0 60px 0;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb-row a {
+      color: #1274bc;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .breadcrumb-row a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mode Switcher Banner (For testing & demonstration) */
+    .portal-mode-banner {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .portal-mode-label {
+      font-size: 0.88rem;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .portal-mode-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-portal-switch {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #cbd5e1;
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .btn-portal-switch.active {
+      background: #1274bc;
+      color: #ffffff;
+      border-color: #1274bc;
+      box-shadow: 0 2px 8px rgba(18, 116, 188, 0.25);
+    }
+
+    /* Patient Profile Header Card */
+    .patient-header-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .patient-header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(to bottom, #1274bc, #06b6d4);
+    }
+
+    .patient-info-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .patient-avatar-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1274bc, #0284c7);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: 0 6px 16px rgba(18, 116, 188, 0.2);
+      flex-shrink: 0;
+    }
+
+    .patient-meta h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      background: #ecfdf5;
+      color: #059669;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 20px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .patient-details-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      font-size: 0.9rem;
+      color: #475569;
+      margin-top: 6px;
+    }
+
+    .patient-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .patient-detail-item i {
+      color: #1274bc;
+      font-size: 1rem;
+    }
+
+    .patient-header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-hoso-action {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-hoso-primary {
+      background: #1274bc;
+      color: #ffffff;
+    }
+
+    .btn-hoso-primary:hover {
+      background: #0d5c96;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(18, 116, 188, 0.25);
+    }
+
+    .btn-hoso-outline {
+      background: #f8fafc;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-hoso-outline:hover {
+      background: #e2e8f0;
+    }
+
+    /* =========================================================================
+       3 FEATURE CARDS - LIGHT BACKGROUND (MÀU SÁNG) AS REQUESTED
+       ========================================================================= */
+    .hoso-three-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 991px) {
+      .hoso-three-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    .hoso-menu-card {
+      background: #ffffff; /* Clean bright white background */
+      border-radius: 18px;
+      padding: 26px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      position: relative;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hoso-menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(18, 116, 188, 0.12);
+      border-color: #cbd5e1;
+    }
+
+    /* Active Card States with Elegant Color Accents */
+    .hoso-menu-card.active.card-don-thuoc {
+      background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 100%);
+      border-color: #0891b2;
+      box-shadow: 0 8px 24px rgba(8, 145, 178, 0.16);
+    }
+
+    .hoso-menu-card.active.card-can-lam-sang {
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+      border-color: #d97706;
+      box-shadow: 0 8px 24px rgba(217, 119, 6, 0.16);
+    }
+
+    .hoso-menu-card.active.card-lich-su {
+      background: linear-gradient(180deg, #fff1f2 0%, #ffffff 100%);
+      border-color: #e11d48;
+      box-shadow: 0 8px 24px rgba(225, 29, 72, 0.16);
+    }
+
+    .card-icon-bubble {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 14px;
+      transition: transform 0.25s;
+    }
+
+    .hoso-menu-card:hover .card-icon-bubble {
+      transform: scale(1.08);
+    }
+
+    /* Soft Pastel Bubbles for Light Theme */
+    .card-icon-bubble.cyan {
+      background: #ecfeff;
+      color: #0891b2;
+    }
+
+    .card-icon-bubble.orange {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .card-icon-bubble.rose {
+      background: #ffe4e6;
+      color: #e11d48;
+    }
+
+    .card-title-main {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .card-badge-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .hoso-menu-card.active.card-don-thuoc .card-badge-pill {
+      background: #ccfbf1;
+      color: #0f766e;
+    }
+
+    .hoso-menu-card.active.card-can-lam-sang .card-badge-pill {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .hoso-menu-card.active.card-lich-su .card-badge-pill {
+      background: #ffe4e6;
+      color: #be123c;
+    }
+
+    .card-click-hint {
+      margin-top: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1274bc;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.9;
+    }
+
+    /* =========================================================================
+       DETAIL SECTIONS (WHITE BACKGROUND, CLEAN MEDICAL PRESENTATION)
+       ========================================================================= */
+    .hoso-detail-section {
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      padding: 28px 32px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .hoso-detail-section {
+        padding: 20px 16px;
+      }
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title-wrap i {
+      font-size: 1.6rem;
+    }
+
+    .section-title-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .section-subtitle-tag {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    /* Patient Header Tag in Detail Views */
+    .patient-code-tag-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .app-link-blue {
+      color: #0284c7;
+      text-decoration: underline;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .app-link-blue:hover {
+      color: #0369a1;
+    }
+
+    /* -------------------------------------------------------------------------
+       VIEW 1: LỊCH SỬ KHÁM BỆNH (EXACT MATCH IMAGE 1 - LIGHT THEME)
+       ------------------------------------------------------------------------- */
+    .history-card-item {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .hosp-title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 14px;
+      line-height: 1.35;
+    }
+
+    .hosp-title-row i {
+      font-size: 1.3rem;
+      color: #1274bc;
+      margin-top: 2px;
+    }
+
+    .meta-code-date-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.92rem;
+      color: #475569;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .meta-code-date-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-code-date-row i {
+      font-size: 1.1rem;
+      color: #1274bc;
+    }
+
+    .patient-sign-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .patient-name-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .patient-name-item i {
+      font-size: 1.15rem;
+      color: #64748b;
+    }
+
+    .sign-doc-btn {
+      color: #475569;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .sign-doc-btn:hover {
+      color: #1274bc;
+    }
+
+    .field-row {
+      font-size: 0.95rem;
+      color: #1e293b;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .field-label {
+      color: #64748b;
+      min-width: 140px;
+      display: inline-block;
+    }
+
+    .review-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    /* -------------------------------------------------------------------------
+       VIEW 2: KẾT QUẢ CẬN LÂM SÀNG (EXACT MATCH IMAGES 2, 3, 4 - LIGHT THEME)
+       ------------------------------------------------------------------------- */
+    .lab-test-block {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .lab-header-cyan {
+      color: #0284c7;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 18px 4px 18px;
+      line-height: 1.35;
+    }
+
+    .lab-header-red {
+      color: #dc2626;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 0 18px 12px 18px;
+    }
+
+    .lab-body-box {
+      border-top: 1px solid #f1f5f9;
+      padding: 14px 18px;
+      font-size: 0.93rem;
+      color: #1e293b;
+      line-height: 1.65;
+      background: #fafbfc;
+    }
+
+    .lab-subheading-cyan {
+      color: #0284c7;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .lab-bullet-line {
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    .lab-conclusion-box {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      border-radius: 0 6px 6px 0;
+      color: #166534;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    /* -------------------------------------------------------------------------
+       VIEW 3: ĐƠN THUỐC (EXACT MATCH IMAGE 5 - LIGHT THEME)
+       ------------------------------------------------------------------------- */
+    .prescription-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+
+    .app-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: #ffffff;
+    }
+
+    .app-table th {
+      border: 1px solid #e2e8f0;
+      padding: 12px 10px;
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+      text-align: center;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .app-table td {
+      border: 1px solid #e2e8f0;
+      padding: 12px 10px;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .app-table tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .app-table td.center { text-align: center; }
+    .app-table td.right { text-align: right; }
+
+    .doctor-advice-box {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 0.92rem;
+      color: #92400e;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      line-height: 1.5;
+    }
+
+    .doctor-advice-box i {
+      font-size: 1.3rem;
+      color: #d97706;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* -------------------------------------------------------------------------
+       EMPTY STATE NOTICES (FOR USERS WITHOUT SQL RECORDS)
+       ------------------------------------------------------------------------- */
+    .empty-state-card {
+      text-align: center;
+      padding: 50px 24px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 2px dashed #cbd5e1;
+      margin: 10px 0;
+    }
+
+    .empty-state-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: #94a3b8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .empty-state-desc {
+      color: #64748b;
+      font-size: 0.92rem;
+      max-width: 460px;
+      margin: 0 auto 16px auto;
+      line-height: 1.55;
+    }
+
+    .sql-hint-badge {
+      display: inline-block;
+      background: #f8fafc;
+      color: #0284c7;
+      font-size: 0.8rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-family: monospace;
+      text-align: left;
+    }
+
+    /* Image Preview Modal */
+    .image-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .image-modal-backdrop.active {
+      display: flex;
+    }
+
+    .image-modal-content {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-modal-header {
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .image-modal-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* Print styles */
+    @media print {
+      .top-bar, .main-header, .nav-bar, .site-footer, .breadcrumb-row, .portal-mode-banner, .patient-header-actions {
+        display: none !important;
+      }
+      .hoso-page-container {
+        padding: 0;
+        background: #ffffff;
+      }
+      .hoso-detail-section {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. TOP BAR
+       ======================================================================== -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <span class="top-bar-item"><i class="ri-map-pin-line me-1"></i> Xã Chí Đám, Huyện Đoan Hùng, Tỉnh Phú Thọ</span>
+        <span class="top-bar-divider">|</span>
+        <span class="top-bar-item"><i class="ri-time-line me-1"></i> Cấp cứu 24/7 - Khám chữa bệnh tất cả các ngày trong tuần</span>
+      </div>
+      <div class="top-bar-right">
+        <a href="tel:0913529115" class="top-bar-hotline"><i class="ri-phone-fill me-1"></i> 0913 529 115</a>
+        <a href="tel:18009415" class="top-bar-hotline"><i class="ri-customer-service-2-fill me-1"></i> 1800 9415</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. MAIN DESKTOP HEADER
+       ======================================================================== -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <!-- Logo -->
+      <a href="/" class="header-logo" title="Bệnh viện Đa khoa Hùng Vương">
+        <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo BVĐK Hùng Vương" class="logo-icon" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+        <div class="logo-text-group">
+          <span class="logo-main-text">BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</span>
+          <span class="logo-sub-text">CHĂM SÓC TẬN TÂM - VƯƠN TẦM ĐẲNG CẤP</span>
+        </div>
+      </a>
+
+      <!-- Live Search Box -->
+      <div class="header-search">
+        <div class="search-input-wrap">
+          <input type="text" id="desktopSearchInput" class="search-input" placeholder="Tìm kiếm chuyên khoa, bác sĩ, dịch vụ..." autocomplete="off">
+          <button class="search-btn" id="desktopSearchBtn" aria-label="Tìm kiếm">
+            <i class="ri-search-line"></i>
+          </button>
+        </div>
+        <div class="search-dropdown" id="desktopSearchDropdown"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <!-- Auth Button / User Profile -->
+        <div class="header-auth-trigger-wrap" id="headerAuthArea">
+          <button class="open-auth-modal-btn" data-tab="login">
+            <i class="ri-user-3-line"></i>
+            <span>Đăng nhập</span>
+          </button>
+        </div>
+
+        <a href="tel:18009415" class="btn-header-call">
+          <i class="ri-phone-line"></i>
+          <span>1800 9415</span>
+        </a>
+        <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="btn-header-book">
+          <i class="ri-calendar-check-line"></i>
+          <span>Đặt lịch khám</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       3. DESKTOP NAVIGATION BAR (BLUE BRAND NAVBAR)
+       ======================================================================== -->
+  <nav class="nav-bar">
+    <div class="container">
+      <ul class="nav-menu" id="desktopNavMenu">
+        <!-- Rendered dynamically via js/app.js -->
+        <li class="nav-item"><a href="/" class="nav-link"><span>Trang chủ</span></a></li>
+        <li class="nav-item"><a href="/#gioi-thieu" class="nav-link"><span>Giới thiệu</span></a></li>
+        <li class="nav-item"><a href="/#chuyen-khoa" class="nav-link"><span>Chuyên khoa</span></a></li>
+        <li class="nav-item"><a href="/#bac-si" class="nav-link"><span>Bác sĩ</span></a></li>
+        <li class="nav-item"><a href="/#tin-tuc" class="nav-link"><span>Tin tức</span></a></li>
+        <li class="nav-item active"><a href="/ho-so" class="nav-link"><span>Hồ sơ sức khỏe</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       4. MOBILE HEADER & OFFCANVAS DRAWER
+       ======================================================================== -->
+  <div class="mobile-header">
+    <a href="/" class="mobile-logo-wrap">
+      <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo" class="mobile-logo-icon" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+      <div class="logo-text-group">
+        <span class="logo-main-text" style="font-size: 0.95rem;">HÙNG VƯƠNG</span>
+        <span class="logo-sub-text" style="font-size: 0.65rem;">BỆNH VIỆN ĐA KHOA</span>
+      </div>
+    </a>
+    <div class="mobile-header-right">
+      <a href="tel:18009415" class="btn-mobile-call" title="Gọi tổng đài">
+        <i class="ri-phone-fill"></i>
+      </a>
+      <button class="btn-mobile-menu" id="openMobileDrawerBtn" aria-label="Mở menu">
+        <i class="ri-menu-line"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Offcanvas Backdrop & Menu -->
+  <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <div class="d-flex align-items-center gap-2">
+        <i class="ri-hospital-line" style="font-size: 1.3rem;"></i>
+        <strong style="font-size: 1.05rem;">MENU CHỨC NĂNG</strong>
+      </div>
+      <button class="drawer-close-btn" id="closeMobileDrawerBtn" aria-label="Đóng menu">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="mobile-drawer-body">
+      <div class="mobile-search-wrap">
+        <div class="search-input-wrap">
+          <input type="text" id="mobileSearchInput" class="search-input" placeholder="Tìm kiếm nhanh...">
+          <button class="search-btn"><i class="ri-search-line"></i></button>
+        </div>
+        <div class="search-dropdown" id="mobileSearchDropdown"></div>
+      </div>
+      <ul class="mobile-nav-list" id="mobileNavList">
+        <!-- Rendered dynamically via js/app.js -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       5. MAIN PATIENT HEALTH PORTAL CONTENT
+       ======================================================================== -->
+  <main class="hoso-page-container">
+    <div class="container">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-row">
+        <a href="/"><i class="ri-home-4-line"></i> Trang chủ</a>
+        <i class="ri-arrow-right-s-line"></i>
+        <span>Cổng bệnh nhân</span>
+        <i class="ri-arrow-right-s-line"></i>
+        <span style="font-weight: 600; color: #1e293b;">Hồ sơ sức khỏe điện tử</span>
+      </div>
+
+      <!-- Patient Profile Header Card -->
+      <div class="patient-header-card">
+        <div class="patient-info-left">
+          <div class="patient-avatar-box">
+            <i class="ri-user-smile-line"></i>
+          </div>
+          <div class="patient-meta">
+            <h2>
+              <span id="patientFullName">NGUYỄN KIỀU LINH</span>
+              <span class="verified-badge"><i class="ri-checkbox-circle-fill"></i> Đã định danh VNeID / BHYT</span>
+            </h2>
+            <div class="patient-details-grid">
+              <div class="patient-detail-item">
+                <i class="ri-phone-line"></i> SĐT: <strong id="patientPhone" style="color: #0f172a; margin-left: 2px;">0913 529 115</strong>
+              </div>
+              <div class="patient-detail-item">
+                <i class="ri-barcode-line"></i> Mã người bệnh: <strong id="patientCode" style="color: #0f172a; margin-left: 2px;">2600168496</strong>
+              </div>
+              <div class="patient-detail-item">
+                <i class="ri-calendar-event-line"></i> Ngày khám: <strong style="color: #0f172a; margin-left: 2px;">09/10/2026</strong>
+              </div>
+              <div class="patient-detail-item">
+                <i class="ri-women-line"></i> Giới tính: <strong id="patientGender" style="color: #0f172a; margin-left: 2px;">Nữ</strong>
+              </div>
+              <div class="patient-detail-item">
+                <i class="ri-hospital-line"></i> Đối tượng: <strong style="color: #0f172a; margin-left: 2px;">Viện phí</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="patient-header-actions">
+          <button class="btn-hoso-action btn-hoso-outline" onclick="window.print()">
+            <i class="ri-printer-line"></i> In hồ sơ
+          </button>
+          <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="btn-hoso-action btn-hoso-primary">
+            <i class="ri-calendar-check-line"></i> Đặt lịch khám mới
+          </a>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           3 FEATURE CARDS - LIGHT BACKGROUND (MÀU SÁNG)
+           ===================================================================== -->
+      <div class="hoso-three-cards-grid">
+        
+        <!-- Card 1: Đơn thuốc -->
+        <div class="hoso-menu-card card-don-thuoc active" id="cardDonThuoc" onclick="selectHosoCategory('donthuoc')">
+          <div class="card-icon-bubble cyan">
+            <i class="ri-capsule-fill"></i>
+          </div>
+          <div class="card-title-main">Đơn thuốc</div>
+          <div class="card-badge-pill" id="badgeDonThuoc">1 đơn thuốc (09/10/2026)</div>
+          <div class="card-click-hint">
+            <span>Xem chi tiết đơn thuốc</span>
+            <i class="ri-arrow-right-line"></i>
+          </div>
+        </div>
+
+        <!-- Card 2: Kết quả cận lâm sàng -->
+        <div class="hoso-menu-card card-can-lam-sang" id="cardCanLamSang" onclick="selectHosoCategory('canlamsang')">
+          <div class="card-icon-bubble orange">
+            <i class="ri-file-list-3-fill"></i>
+          </div>
+          <div class="card-title-main">Kết quả cận lâm sàng</div>
+          <div class="card-badge-pill" id="badgeCanLamSang">3 kết quả xét nghiệm</div>
+          <div class="card-click-hint">
+            <span>Xem kết quả CĐHA & XN</span>
+            <i class="ri-arrow-right-line"></i>
+          </div>
+        </div>
+
+        <!-- Card 3: Lịch sử khám bệnh -->
+        <div class="hoso-menu-card card-lich-su" id="cardLichSu" onclick="selectHosoCategory('lichsu')">
+          <div class="card-icon-bubble rose">
+            <i class="ri-history-fill"></i>
+          </div>
+          <div class="card-title-main">Lịch sử khám bệnh</div>
+          <div class="card-badge-pill" id="badgeLichSu">Lần khám gần nhất: 09/10/2026</div>
+          <div class="card-click-hint">
+            <span>Xem quá trình điều trị</span>
+            <i class="ri-arrow-right-line"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =====================================================================
+           DETAIL SECTION: 1. ĐƠN THUỐC (EXACT MATCH IMAGE 5)
+           ===================================================================== -->
+      <div class="hoso-detail-section" id="sectionDonThuoc" style="display: block;">
+        
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <i class="ri-capsule-fill" style="color: #0891b2;"></i>
+            <div>
+              <h3 class="section-title-text">Đơn thuốc ngoại trú điện tử</h3>
+              <span class="section-subtitle-tag">Đợt khám bệnh ngày 09/10/2026 - Khoa Khám bệnh</span>
+            </div>
+          </div>
+          <button class="btn-hoso-action btn-hoso-outline" onclick="window.print()">
+            <i class="ri-printer-line"></i> In đơn thuốc
+          </button>
+        </div>
+
+        <!-- Populated via JavaScript: Seeded data OR Empty state -->
+        <div id="containerDonThuocContent"></div>
+
+      </div>
+
+      <!-- =====================================================================
+           DETAIL SECTION: 2. KẾT QUẢ CẬN LÂM SÀNG (EXACT MATCH IMAGES 2, 3, 4)
+           ===================================================================== -->
+      <div class="hoso-detail-section" id="sectionCanLamSang" style="display: none;">
+        
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <i class="ri-file-list-3-fill" style="color: #d97706;"></i>
+            <div>
+              <h3 class="section-title-text">Kết quả Cận lâm sàng & Chẩn đoán hình ảnh</h3>
+              <span class="section-subtitle-tag">Phiếu kết quả xét nghiệm và siêu âm ngày 09/10/2026</span>
+            </div>
+          </div>
+          <button class="btn-hoso-action btn-hoso-outline" onclick="window.print()">
+            <i class="ri-printer-line"></i> In kết quả
+          </button>
+        </div>
+
+        <!-- Populated via JavaScript: Seeded data OR Empty state -->
+        <div id="containerCanLamSangContent"></div>
+
+      </div>
+
+      <!-- =====================================================================
+           DETAIL SECTION: 3. LỊCH SỬ KHÁM BỆNH (EXACT MATCH IMAGE 1)
+           ===================================================================== -->
+      <div class="hoso-detail-section" id="sectionLichSu" style="display: none;">
+        
+        <div class="section-header-row">
+          <div class="section-title-wrap">
+            <i class="ri-history-fill" style="color: #e11d48;"></i>
+            <div>
+              <h3 class="section-title-text">Lịch sử khám & Điều trị tại bệnh viện</h3>
+              <span class="section-subtitle-tag">Hệ thống bệnh án điện tử EMR BVĐK Hùng Vương</span>
+            </div>
+          </div>
+          <button class="btn-hoso-action btn-hoso-outline" onclick="window.print()">
+            <i class="ri-printer-line"></i> In bệnh án
+          </button>
+        </div>
+
+        <!-- Populated via JavaScript: Seeded data OR Empty state -->
+        <div id="containerLichSuContent"></div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       6. IMAGE PREVIEW MODAL
+       ======================================================================== -->
+  <div class="image-modal-backdrop" id="imageModal" onclick="closeImageModal(event)">
+    <div class="image-modal-content" onclick="event.stopPropagation()">
+      <div class="image-modal-header">
+        <strong id="imageModalTitle" style="color: #0f172a; font-size: 1.05rem;">Kết quả hình ảnh cận lâm sàng</strong>
+        <button class="drawer-close-btn" onclick="closeImageModal()" style="border: none; background: transparent; cursor: pointer; font-size: 1.3rem;">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+      <div class="image-modal-body">
+        <div id="imageModalGraphic" style="min-height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px dashed #cbd5e1;">
+          <i class="ri-image-2-line" style="font-size: 4rem; color: #94a3b8; margin-bottom: 12px;"></i>
+          <p style="color: #475569; font-weight: 600; margin-bottom: 4px;" id="imageModalDesc">Hình ảnh chụp chẩn đoán ngày 09/10/2026</p>
+          <span style="color: #64748b; font-size: 0.82rem;">Hệ thống lưu trữ và truyền hình ảnh y khoa PACS - BVĐK Hùng Vương</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       7. AUTHENTICATION MODAL (LOGIN & REGISTER WITH PHONE)
+       ======================================================================== -->
+  <div class="auth-modal-backdrop" id="authModalBackdrop"></div>
+  <div class="auth-modal" id="authModal">
+    <div class="auth-modal-header">
+      <button class="auth-modal-close" id="closeAuthModalBtn" aria-label="Đóng">
+        <i class="ri-close-line"></i>
+      </button>
+      <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo" class="auth-brand-logo" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+      <h3 class="auth-modal-title">CỔNG BỆNH NHÂN</h3>
+      <p class="auth-modal-subtitle">Bệnh viện Đa khoa Hùng Vương - Chăm sóc tận tâm</p>
+    </div>
+
+    <!-- Tabs: Đăng nhập vs Đăng ký -->
+    <div class="auth-tabs">
+      <div class="auth-tab-btn active" id="authTabLogin">ĐĂNG NHẬP</div>
+      <div class="auth-tab-btn" id="authTabRegister">ĐĂNG KÝ</div>
+    </div>
+
+    <div class="auth-modal-body">
+      <!-- Alert message box -->
+      <div class="auth-alert" id="authAlertBox"></div>
+
+      <!-- Form 1: Đăng nhập -->
+      <form id="authFormLogin">
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="loginPhone">Số điện thoại</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-phone-line auth-input-icon"></i>
+            <input type="tel" id="loginPhone" class="auth-form-input" placeholder="Ví dụ: 0913 529 115" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="loginPassword">Mật khẩu</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-lock-2-line auth-input-icon"></i>
+            <input type="password" id="loginPassword" class="auth-form-input" placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+            <button type="button" class="toggle-password-btn" data-target="loginPassword" aria-label="Ẩn/hiện mật khẩu">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn" id="btnLoginSubmit">
+          Đăng nhập ngay
+        </button>
+      </form>
+
+      <!-- Form 2: Đăng ký -->
+      <form id="authFormRegister" style="display: none;">
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regName">Họ và tên người bệnh</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-user-line auth-input-icon"></i>
+            <input type="text" id="regName" class="auth-form-input" placeholder="Ví dụ: Nguyễn Kiều Linh" required>
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regPhone">Số điện thoại</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-phone-line auth-input-icon"></i>
+            <input type="tel" id="regPhone" class="auth-form-input" placeholder="Ví dụ: 0913 529 115" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regPassword">Mật khẩu</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-lock-2-line auth-input-icon"></i>
+            <input type="password" id="regPassword" class="auth-form-input" placeholder="Tối thiểu 6 ký tự..." required autocomplete="new-password">
+            <button type="button" class="toggle-password-btn" data-target="regPassword" aria-label="Ẩn/hiện mật khẩu">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="regConfirmPassword">Xác nhận mật khẩu</label>
+          <div class="auth-input-wrapper">
+            <i class="ri-shield-check-line auth-input-icon"></i>
+            <input type="password" id="regConfirmPassword" class="auth-form-input" placeholder="Nhập lại mật khẩu..." required autocomplete="new-password">
+            <button type="button" class="toggle-password-btn" data-target="regConfirmPassword" aria-label="Ẩn/hiện mật khẩu">
+              <i class="ri-eye-line"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn" id="btnRegisterSubmit">
+          Tạo tài khoản
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       8. CANONICAL FOOTER (EXACT MATCH INDEX.HTML 4-COLUMN FOOTER)
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Identity & Legal -->
+        <div>
+          <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo Footer" class="footer-logo" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+          <h4 class="footer-col-title" style="margin-bottom: 8px;">BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</h4>
+          <p class="footer-desc-text">
+            Chăm sóc người bệnh bằng cả trái tim. Mang dịch vụ y tế kỹ thuật cao đến gần hơn với nhân dân mọi miền.
+          </p>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <i class="ri-map-pin-fill"></i>
+              <span>Xã Chí Đám, Huyện Đoan Hùng, Tỉnh Phú Thọ</span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-phone-fill"></i>
+              <span>Tổng đài CSKH: <a href="tel:18009415" style="color: #fef08a; font-weight: 700;">1800 9415</a></span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-alarm-warning-fill"></i>
+              <span>Cấp cứu 24/7: <a href="tel:0913529115" style="color: #fef08a; font-weight: 700;">0913 529 115</a></span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-file-text-fill"></i>
+              <span>Giấy phép hoạt động: 165/BYT - GPHĐ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 2: Working Hours -->
+        <div>
+          <h4 class="footer-col-title">THỜI GIAN LÀM VIỆC</h4>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <i class="ri-time-fill"></i>
+              <div>
+                <strong>Tiếp đón khám bệnh:</strong><br>
+                Từ 05h30 hàng ngày (kể cả Thứ 7, Chủ Nhật & Ngày Lễ)
+              </div>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-hospital-fill"></i>
+              <div>
+                <strong>Khám chữa bệnh BHYT:</strong><br>
+                Sáng: 07h00 - 11h30 | Chiều: 13h30 - 17h00
+              </div>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-heart-pulse-fill"></i>
+              <div>
+                <strong>Cấp cứu & Điều trị nội trú:</strong><br>
+                Phục vụ 24/24 tất cả các ngày trong năm
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 3: Clinic Network -->
+        <div>
+          <h4 class="footer-col-title">HỆ THỐNG PHÒNG KHÁM VỆ TINH</h4>
+          <div class="footer-clinics-list">
+            <div class="footer-clinic-item">
+              <div class="clinic-name">BỆNH VIỆN HÙNG VƯƠNG GIA LAI</div>
+              <div class="clinic-address">236A Lê Duẩn, Phường Hội Phú, Tỉnh Gia Lai</div>
+              <div class="clinic-phone">Hotline: 1800 8015 - ĐT: 0914 555 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - SƠN DƯƠNG</div>
+              <div class="clinic-address">TDP Tân Phúc, Xã Sơn Dương, Tỉnh Tuyên Quang</div>
+              <div class="clinic-phone">ĐT: 0913 529 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - KIM XUYÊN</div>
+              <div class="clinic-address">Thôn Gò Đình, Xã Hồng Sơn, Tỉnh Tuyên Quang</div>
+              <div class="clinic-phone">ĐT: 0913 709 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - CHÂN MỘNG</div>
+              <div class="clinic-address">Khu 2, Xã Chân Mộng, Tỉnh Phú Thọ</div>
+              <div class="clinic-phone">ĐT: 0913 759 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - THANH BA</div>
+              <div class="clinic-address">Khu 4, Xã Thanh Ba, Tỉnh Phú Thọ</div>
+              <div class="clinic-phone">ĐT: 0913 704 115</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 4: Connect & Newsletter -->
+        <div>
+          <h4 class="footer-col-title">KẾT NỐI VỚI CHÚNG TÔI</h4>
+          <p class="footer-desc-text">Theo dõi tin tức y học, cẩm nang sức khỏe và thông tin mới nhất:</p>
+          <div class="footer-socials">
+            <a href="https://facebook.com/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Facebook">
+              <i class="ri-facebook-fill"></i>
+            </a>
+            <a href="https://tiktok.com/@benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="TikTok">
+              <i class="ri-tiktok-fill"></i>
+            </a>
+            <a href="https://youtube.com/@benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="YouTube">
+              <i class="ri-youtube-fill"></i>
+            </a>
+            <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Zalo">
+              <i class="ri-chat-1-fill"></i>
+            </a>
+            <a href="https://maps.google.com/?cid=123" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Google Maps">
+              <i class="ri-map-pin-2-fill"></i>
+            </a>
+          </div>
+
+          <h5 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; color: #ffffff;">ĐĂNG KÝ BẢN TIN SỨC KHỎE</h5>
+          <form class="footer-newsletter-form" onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã đăng ký nhận bản tin sức khỏe!');">
+            <input type="email" class="footer-newsletter-input" placeholder="Nhập email của bạn..." required>
+            <button type="submit" class="footer-newsletter-btn">GỬI</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Copyright Bottom Bar -->
+      <div class="footer-bottom-bar">
+        <p>Copyright © 2026 Bệnh viện Đa khoa Hùng Vương. All rights reserved. | Cổng bệnh nhân & Quản lý hồ sơ sức khỏe điện tử</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating actions on bottom-left -->
+  <div class="floating-actions-left">
+    <a href="tel:18009415" class="floating-pill hotline btn-lac-lu" title="Gọi cấp cứu">
+      <i class="ri-phone-fill"></i>
+      <span>1800 9415</span>
+    </a>
+    <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="floating-pill appointment btn-lac-lu delay-1" title="Đặt lịch khám ngay">
+      <i class="ri-calendar-check-line"></i>
+      <span>Đặt lịch khám</span>
+    </a>
+  </div>
+
+  <button id="globalBackToTop" title="Lên đầu trang" aria-label="Cuộn lên đầu trang">
+    <i class="ri-arrow-up-line"></i>
+  </button>
+
+  <!-- ========================================================================
+       9. SCRIPTS
+       ======================================================================== -->
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Supabase Configuration
+    const SUPABASE_URL = 'https://tfnxmcseexinbgkzwmwh.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_TiioCrJ1dydHkTy3EyP9mg_gIeBphuV';
+    let supabaseClient = null;
+
+    if (window.supabase) {
+      try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (e) {
+        console.warn('Supabase init:', e);
+      }
+    }
+
+    // Current State
+    let currentCategory = 'donthuoc';
+    let currentMode = 'seeded'; // 'seeded' (has SQL record) or 'empty' (no SQL record)
+
+    // Exact Medical Data matching Screenshots 1, 2, 3, 4, 5 with DATE 09/10/2026
+    const SEEDED_PATIENT_DATA = {
+      patient_code: '2600168496',
+      patient_name: 'NGUYỄN KIỀU LINH',
+      visit_date: '09/10/2026 14:04',
+      hospital_name: '[25329] Bệnh viện đa khoa Tư nhân Hùng Vương',
+      treatment_type: 'Ngoại trú',
+      symptoms: '',
+      
+      // Prescriptions (Image 5) - Date 09/10/2026
+      prescriptions: [
+        { stt: 1, thuoc: 'Benita', don_vi: 'Lọ', so_luong: 1, don_gia: '110.000', thanh_tien: '110.000', cach_dung: '2 nhát / bên/ lần * 1 lần / ngày' },
+        { stt: 2, thuoc: 'Curam 1000mg', don_vi: 'Viên', so_luong: 14, don_gia: '7.254', thanh_tien: '101.556', cach_dung: '1 viên/ lần* 2 lần/ ngày* 7 ngày' },
+        { stt: 3, thuoc: 'Medovent 30mg', don_vi: 'Viên', so_luong: 14, don_gia: '2.135', thanh_tien: '29.890', cach_dung: '1 viên/ lần* 2 lần/ ngày* 7 ngày' },
+        { stt: 4, thuoc: 'Medrol <16>', don_vi: 'Viên', so_luong: 5, don_gia: '4.480', thanh_tien: '22.400', cach_dung: '1 viên/ lần* 1 lần/ ngày* 5 ngày' },
+        { stt: 5, thuoc: 'Pariet 20mg', don_vi: 'Viên', so_luong: 14, don_gia: '22.049', thanh_tien: '308.686', cach_dung: '1 viên/ lần* 2 lần/ ngày* 7 ngày' },
+        { stt: 6, thuoc: 'Pms-Ondansetron 8mg', don_vi: 'Viên', so_luong: 5, don_gia: '11.200', thanh_tien: '56.000', cach_dung: '1 viên/ lần* 1 lần/ ngày* 5 ngày' },
+        { stt: 7, thuoc: 'Rửa mũi xoang bằng máy', don_vi: 'Lần', so_luong: 1, don_gia: '50.000', thanh_tien: '50.000', cach_dung: '1 lần/ngày' },
+        { stt: 8, thuoc: 'Xisat 75ml', don_vi: 'Chai', so_luong: 1, don_gia: '35.000', thanh_tien: '35.000', cach_dung: 'Xịt mũi 3-4 lần/ngày' }
+      ],
+
+      // Lab Results (Images 2, 3, 4) - Date 09/10/2026
+      lab_results: [
+        {
+          id: 1,
+          title: 'Chỉ định: 09/10/2026 15:00 - Điện tim thường',
+          doctor: 'Đọc kết quả: Nguyễn Việt Anh - 09/10/2026 16:58',
+          items: [],
+          conclusion: 'Nhịp xoang, tần số 68 ck/phút. Trục trung gian.',
+          has_image: true,
+          type: 'ecg'
+        },
+        {
+          id: 2,
+          title: 'Chỉ định: 09/10/2026 15:00 - Siêu âm ổ bụng',
+          doctor: 'Đọc kết quả: Tạ Thị Hà - 09/10/2026 16:52',
+          items: [
+            '- GAN: Kích thước bình thường, nhu mô đều, không có khối khu trú. Tĩnh mạch gan không giãn, không có huyết khối.',
+            '- ĐƯỜNG MẬT: Trong gan không giãn, không có sỏi.',
+            '- ỐNG MẬT CHỦ: Không giãn, không có sỏi.',
+            '- TÚI MẬT: Thành mỏng, dịch mật trong, không giãn, không có sỏi.',
+            '- TĨNH MẠCH CỬA: Không giãn, trong lòng không có huyết khối.',
+            '- TỤY: Kích thước bình thường, nhu mô đều, ống Wirsung không giãn.',
+            '- LÁCH: Kích thước bình thường, nhu mô đều, tĩnh mạch lách không giãn, không có huyết khối.',
+            '- THẬN PHẢI: Kích thước bình thường, nhu mô đều, ranh giới nhu mô và đài bể thận rõ, đài bể thận không giãn, không có sỏi. Niệu quản không giãn.',
+            '- THẬN TRÁI: Kích thước bình thường, nhu mô đều, ranh giới nhu mô và đài bể thận rõ, đài bể thận không giãn, không có sỏi. Niệu quản không giãn.',
+            '- BÀNG QUANG: Thành mỏng, nước tiểu trong, không có sỏi.',
+            '- TỬ CUNG: Kích thước bình thường, nhu mô đều, không thấy khối bất thường. Buồng tử cung không có dịch.',
+            '- Phần phụ hai bên không thấy khối bất thường.',
+            '- Ổ BỤNG: Không có dịch tự do.',
+            'Ruột thừa vị trí hố chậu phải, ĐK ngang khoảng 3.2mm, ấn xẹp, lòng chứa khí, xung quanh không thấy thâm nhiễm.'
+          ],
+          conclusion: 'Hình ảnh siêu âm hiện tại không thấy bất thường.',
+          has_image: true,
+          type: 'ultrasound'
+        },
+        {
+          id: 3,
+          title: 'Chỉ định: 09/10/2026 15:00 - Khám chuyên khoa Tai – Mũi – Họng',
+          doctor: 'Đọc kết quả: Lò Thị Xuân - 09/10/2026 16:21',
+          items: [
+            '- TAI:',
+            '  + Ống tai ngoài 2 bên có ít đáy , không có dị vật ống tai',
+            '  + Màng nhĩ 2 bên sáng, không thủng',
+            '- MŨI:',
+            '  + Niêm mạc cuốn mũi 2 bên nề, sàn mũi khe mũi giữa 2 bên có nhiều dịch nhày. Khe mũi giữa phải có polyp độ IV, khe mũi giữa trái có polyp độ III',
+            '  + Vách ngăn mũi bình thường, không lệch vẹo.',
+            '  + Vòm có ít dịch nhày, còn tổ chức lympho',
+            '- HỌNG:',
+            '  + Niêm mạc thành sau họng đỏ, có tổ chức hạt viêm.',
+            '  + Amydal hai bên không viêm',
+            '  + Dây thanh bình thường, niêm mạc hồng nhạt, đóng mở khít. Sụn phễu di động bình thường.',
+            '  + Hạ họng sạch, không có u cục'
+          ],
+          conclusion: 'Viêm mũi xoang mạn tính (polyp mũi 2 bên).',
+          has_image: true,
+          type: 'ent'
+        }
+      ]
+    };
+
+    // Switch between the 3 main cards
+    function selectHosoCategory(category) {
+      currentCategory = category;
+
+      const cardDonThuoc = document.getElementById('cardDonThuoc');
+      const cardCanLamSang = document.getElementById('cardCanLamSang');
+      const cardLichSu = document.getElementById('cardLichSu');
+
+      const secDonThuoc = document.getElementById('sectionDonThuoc');
+      const secCanLamSang = document.getElementById('sectionCanLamSang');
+      const secLichSu = document.getElementById('sectionLichSu');
+
+      [cardDonThuoc, cardCanLamSang, cardLichSu].forEach(c => c?.classList.remove('active'));
+      if (secDonThuoc) secDonThuoc.style.display = 'none';
+      if (secCanLamSang) secCanLamSang.style.display = 'none';
+      if (secLichSu) secLichSu.style.display = 'none';
+
+      if (category === 'donthuoc') {
+        cardDonThuoc?.classList.add('active');
+        if (secDonThuoc) secDonThuoc.style.display = 'block';
+      } else if (category === 'canlamsang') {
+        cardCanLamSang?.classList.add('active');
+        if (secCanLamSang) secCanLamSang.style.display = 'block';
+      } else if (category === 'lichsu') {
+        cardLichSu?.classList.add('active');
+        if (secLichSu) secLichSu.style.display = 'block';
+      }
+
+      // Smooth scroll if on mobile
+      if (window.innerWidth < 768) {
+        const activeSection = document.getElementById(`section${category.charAt(0).toUpperCase() + category.slice(1)}`);
+        activeSection?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Toggle Portal View Mode (Seeded vs Empty)
+    function setPortalViewMode(mode) {
+      currentMode = mode;
+      
+      const btnSeeded = document.getElementById('btnModeSeeded');
+      const btnEmpty = document.getElementById('btnModeEmpty');
+      const labelText = document.getElementById('currentModeLabelText');
+
+      if (mode === 'seeded') {
+        btnSeeded?.classList.add('active');
+        btnEmpty?.classList.remove('active');
+        const savedUserStr = localStorage.getItem('hospital_logged_user');
+        let displayPhone = '0338 976 989';
+        let displayName = 'NGUYỄN KIỀU LINH';
+        if (savedUserStr) {
+          try {
+            const user = JSON.parse(savedUserStr);
+            const rawPhone = user.user_metadata?.phone || user.phone;
+            if (rawPhone) {
+              displayPhone = rawPhone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+            }
+            if (user.user_metadata?.full_name) {
+              displayName = user.user_metadata.full_name;
+            }
+          } catch(e) {}
+        }
+
+        if (labelText) labelText.textContent = `Đang hiển thị hồ sơ đã cấp dữ liệu EMR (${displayPhone})`;
+
+        document.getElementById('patientFullName').textContent = displayName;
+        document.getElementById('patientPhone').textContent = displayPhone;
+        document.getElementById('patientCode').textContent = '2600168496';
+        document.getElementById('patientGender').textContent = 'Nữ';
+
+        document.getElementById('badgeDonThuoc').textContent = '1 đơn thuốc (09/10/2026)';
+        document.getElementById('badgeCanLamSang').textContent = '3 kết quả xét nghiệm';
+        document.getElementById('badgeLichSu').textContent = 'Lần khám gần nhất: 09/10/2026';
+
+        renderSeededContent();
+      } else {
+        btnEmpty?.classList.add('active');
+        btnSeeded?.classList.remove('active');
+        if (labelText) labelText.textContent = 'Đang hiển thị người dùng chưa có thông tin bệnh án';
+
+        const savedUserStr = localStorage.getItem('hospital_logged_user');
+        if (savedUserStr) {
+          try {
+            const user = JSON.parse(savedUserStr);
+            document.getElementById('patientFullName').textContent = user.user_metadata?.full_name || 'Người bệnh mới';
+            document.getElementById('patientPhone').textContent = user.user_metadata?.phone || '0987 654 321';
+          } catch(e) {}
+        } else {
+          document.getElementById('patientFullName').textContent = 'Người bệnh mới';
+          document.getElementById('patientPhone').textContent = 'Chưa xác thực';
+        }
+
+        document.getElementById('patientCode').textContent = 'Chưa cấp';
+        document.getElementById('patientGender').textContent = 'Chưa cập nhật';
+
+        document.getElementById('badgeDonThuoc').textContent = 'Chưa có thông tin';
+        document.getElementById('badgeCanLamSang').textContent = 'Chưa có thông tin';
+        document.getElementById('badgeLichSu').textContent = 'Chưa có thông tin';
+
+        renderEmptyContent();
+      }
+    }
+
+    // Render Seeded View Content (Exact match Screenshots 1-5, date 09/10/2026)
+    function renderSeededContent() {
+      // 1. Render Đơn thuốc (Image 5)
+      const containerDonThuoc = document.getElementById('containerDonThuocContent');
+      if (containerDonThuoc) {
+        let totalMoney = 0;
+        const rowsHtml = SEEDED_PATIENT_DATA.prescriptions.map(p => {
+          return `
+            <tr>
+              <td class="center font-semibold">${p.stt}</td>
+              <td><strong>${p.thuoc}</strong></td>
+              <td class="center">${p.don_vi || 'Viên'}</td>
+              <td class="center font-bold" style="color: #0891b2;">${p.so_luong}</td>
+              <td class="right">${p.don_gia}</td>
+              <td class="right font-semibold">${p.thanh_tien}</td>
+              <td>${p.cach_dung}</td>
+            </tr>
+          `;
+        }).join('');
+
+        containerDonThuoc.innerHTML = `
+          <div class="patient-code-tag-box">
+            <div>
+              <i class="ri-barcode-box-line me-1" style="color: #0891b2;"></i>
+              Mã người bệnh: <strong>${SEEDED_PATIENT_DATA.patient_code} - ${SEEDED_PATIENT_DATA.patient_name}</strong>
+            </div>
+            <div style="font-size: 0.88rem; color: #64748b;">
+              <i class="ri-calendar-line me-1"></i> Ngày kê đơn: <strong>09/10/2026 14:04</strong>
+            </div>
+          </div>
+
+          <div style="background: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.92rem; color: #0f766e; display: flex; flex-wrap: wrap; gap: 16px 28px;">
+            <span><i class="ri-user-star-line me-1"></i> Bác sĩ kê đơn: <strong>BSCKI. Đoàn Quốc Tuấn</strong></span>
+            <span><i class="ri-stethoscope-line me-1"></i> Chẩn đoán: <strong>Viêm mũi xoang mạn tính (polyp mũi 2 bên)</strong></span>
+            <span><i class="ri-store-2-line me-1"></i> Nơi nhận: <strong>Nhà thuốc Bệnh viện Đa khoa Hùng Vương</strong></span>
+          </div>
+
+          <div class="prescription-table-wrap">
+            <table class="app-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">STT</th>
+                  <th>Tên thuốc - Hàm lượng</th>
+                  <th style="width: 70px;">ĐVT</th>
+                  <th style="width: 60px;">SL</th>
+                  <th style="width: 110px;">Đơn giá (đ)</th>
+                  <th style="width: 120px;">Thành tiền (đ)</th>
+                  <th>Cách dùng & Liều lượng</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+              <tfoot>
+                <tr style="background: #f8fafc; font-weight: 700;">
+                  <td colspan="4" class="center" style="color: #0f172a;">TỔNG CỘNG (8 KHOẢN THUỐC & DỊCH VỤ)</td>
+                  <td class="right" colspan="2" style="color: #e11d48; font-size: 1.05rem;">713.532 VNĐ</td>
+                  <td style="color: #64748b; font-size: 0.82rem;">Đã bao gồm VAT & vật tư y tế</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="doctor-advice-box">
+            <i class="ri-information-line"></i>
+            <div>
+              <strong>Lời dặn của bác sĩ:</strong> Uống thuốc đúng giờ, sau ăn no. Dùng đủ liều 7 ngày không tự ý ngừng thuốc khi thấy giảm triệu chứng. Hạn chế tiếp xúc bụi lạnh, giữ ấm cổ ngực, đeo khẩu trang khi ra ngoài. Tái khám sau 10 ngày (ngày 19/10/2026) hoặc khi có biểu hiện bất thường.
+            </div>
+          </div>
+        `;
+      }
+
+      // 2. Render Cận lâm sàng (Images 2, 3, 4)
+      const containerCanLamSang = document.getElementById('containerCanLamSangContent');
+      if (containerCanLamSang) {
+        const blocksHtml = SEEDED_PATIENT_DATA.lab_results.map(r => {
+          let itemsHtml = '';
+          if (r.items && r.items.length > 0) {
+            itemsHtml = r.items.map(it => `<div class="lab-bullet-line">${it}</div>`).join('');
+          }
+
+          return `
+            <div class="lab-test-block">
+              <div class="lab-header-cyan">${r.title}</div>
+              <div class="lab-header-red">${r.doctor}</div>
+              <div class="lab-body-box">
+                ${itemsHtml}
+                <div class="lab-conclusion-box">
+                  <i class="ri-check-line me-1"></i> Kết luận: ${r.conclusion}
+                </div>
+                <div style="margin-top: 14px;">
+                  <a class="app-link-blue" onclick="openImageModal('${r.type}', '${r.title}')">
+                    <i class="ri-image-line"></i> Xem kết quả hình ảnh
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        containerCanLamSang.innerHTML = `
+          <div class="patient-code-tag-box">
+            <div>
+              <i class="ri-barcode-box-line me-1" style="color: #d97706;"></i>
+              Mã người bệnh: <strong>${SEEDED_PATIENT_DATA.patient_code} - ${SEEDED_PATIENT_DATA.patient_name}</strong>
+            </div>
+            <div style="font-size: 0.88rem; color: #64748b;">
+              <i class="ri-calendar-line me-1"></i> Ngày thực hiện: <strong>09/10/2026</strong>
+            </div>
+          </div>
+
+          ${blocksHtml}
+
+          <div style="text-align: center; color: #64748b; font-size: 0.88rem; padding: 18px 0 6px 0;">
+            <i class="ri-checkbox-circle-line me-1" style="color: #16a34a;"></i>
+            Đã hiển thị toàn bộ kết quả cận lâm sàng của đợt khám ngày 09/10/2026.
+          </div>
+        `;
+      }
+
+      // 3. Render Lịch sử khám bệnh (Image 1)
+      const containerLichSu = document.getElementById('containerLichSuContent');
+      if (containerLichSu) {
+        containerLichSu.innerHTML = `
+          <div class="history-card-item">
+            
+            <div class="hosp-title-row">
+              <i class="ri-hospital-line"></i>
+              <span>${SEEDED_PATIENT_DATA.hospital_name}</span>
+            </div>
+
+            <div class="meta-code-date-row">
+              <span><i class="ri-barcode-line"></i> ${SEEDED_PATIENT_DATA.patient_code}</span>
+              <span><i class="ri-calendar-line"></i> ${SEEDED_PATIENT_DATA.visit_date}</span>
+            </div>
+
+            <div class="patient-sign-row">
+              <div class="patient-name-item">
+                <i class="ri-user-line"></i>
+                <span>${SEEDED_PATIENT_DATA.patient_name}</span>
+              </div>
+              <a class="sign-doc-btn" onclick="alert('Bệnh án điện tử đã được xác thực bảo mật và lưu trữ trên hệ thống EMR.')">
+                <span>Ký bệnh án: Chưa ký</span>
+                <i class="ri-edit-line"></i>
+              </a>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Bác sỹ chỉ định:</span>
+              <strong style="color: #0f172a;">Đoàn Quốc Tuấn</strong>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Đối tượng:</span>
+              <strong style="color: #0f172a;">${SEEDED_PATIENT_DATA.treatment_type}</strong>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Triệu chứng:</span>
+              <span style="color: #64748b;">(Không có triệu chứng cấp tính)</span>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Kết quả khám bệnh:</span>
+              <strong style="color: #e11d48;">Viêm mũi xoang mạn tính (polyp mũi 2 bên)</strong>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Xem kết quả khám:</span>
+              <a class="app-link-blue" onclick="selectHosoCategory('canlamsang')">
+                [Xem chi tiết 3 kết quả cận lâm sàng]
+              </a>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Đơn thuốc ngoại trú:</span>
+              <a class="app-link-blue" onclick="selectHosoCategory('donthuoc')">
+                [Xem chi tiết 8 khoản thuốc & vật tư đã kê]
+              </a>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Hẹn tái khám:</span>
+              <span style="color: #0284c7; font-weight: 600;">10 ngày (Ngày 19/10/2026)</span>
+            </div>
+
+            <div class="review-action-row">
+              <span style="color: #64748b; font-size: 0.88rem;">Khám đánh giá tổng quan</span>
+              <button class="btn-hoso-action btn-hoso-outline" style="padding: 6px 14px;" onclick="selectHosoCategory('canlamsang')">
+                <i class="ri-arrow-right-up-line"></i> Chi tiết
+              </button>
+            </div>
+
+          </div>
+        `;
+      }
+    }
+
+    // Render Empty View Content (For unseeded users)
+    function renderEmptyContent() {
+      const emptyDonThuocHtml = `
+        <div class="empty-state-card">
+          <div class="empty-state-icon">
+            <i class="ri-capsule-line"></i>
+          </div>
+          <div class="empty-state-title">Chưa có thông tin đơn thuốc</div>
+          <p class="empty-state-desc">
+            Tài khoản số điện thoại này hiện chưa có đơn thuốc nào được kê trên hệ thống EMR của Bệnh viện Đa khoa Hùng Vương.
+          </p>
+          <div class="sql-hint-badge">
+            <i class="ri-information-line me-1"></i> Ghi chú: Thông tin đơn thuốc chỉ hiển thị với user riêng đã được chạy lệnh SQL trong file <code>seed_user.sql</code>.
+          </div>
+        </div>
+      `;
+
+      const emptyCanLamSangHtml = `
+        <div class="empty-state-card">
+          <div class="empty-state-icon">
+            <i class="ri-file-search-line"></i>
+          </div>
+          <div class="empty-state-title">Chưa có kết quả cận lâm sàng</div>
+          <p class="empty-state-desc">
+            Hiện tại chưa có kết quả xét nghiệm, chẩn đoán hình ảnh hay thăm dò chức năng nào được đồng bộ cho tài khoản này.
+          </p>
+          <div class="sql-hint-badge">
+            <i class="ri-information-line me-1"></i> Ghi chú: Khi bệnh nhân hoàn thành khám tại bệnh viện, kết quả PACS & LIS sẽ tự động cập nhật tại đây.
+          </div>
+        </div>
+      `;
+
+      const emptyLichSuHtml = `
+        <div class="empty-state-card">
+          <div class="empty-state-icon">
+            <i class="ri-history-line"></i>
+          </div>
+          <div class="empty-state-title">Chưa có lịch sử khám bệnh</div>
+          <p class="empty-state-desc">
+            Bạn chưa có lượt khám bệnh hoặc điều trị nội/ngoại trú nào tại Bệnh viện Đa khoa Hùng Vương.
+          </p>
+          <div style="margin-top: 14px;">
+            <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="btn-hoso-action btn-hoso-primary">
+              <i class="ri-calendar-check-line"></i> Đặt lịch khám ngay
+            </a>
+          </div>
+        </div>
+      `;
+
+      const containerDonThuoc = document.getElementById('containerDonThuocContent');
+      if (containerDonThuoc) containerDonThuoc.innerHTML = emptyDonThuocHtml;
+
+      const containerCanLamSang = document.getElementById('containerCanLamSangContent');
+      if (containerCanLamSang) containerCanLamSang.innerHTML = emptyCanLamSangHtml;
+
+      const containerLichSu = document.getElementById('containerLichSuContent');
+      if (containerLichSu) containerLichSu.innerHTML = emptyLichSuHtml;
+    }
+
+    // Image Modal Control
+    function openImageModal(type, title) {
+      const modal = document.getElementById('imageModal');
+      const modalTitle = document.getElementById('imageModalTitle');
+      const modalDesc = document.getElementById('imageModalDesc');
+      const graphic = document.getElementById('imageModalGraphic');
+
+      if (modalTitle) modalTitle.textContent = title || 'Kết quả hình ảnh cận lâm sàng';
+
+      if (type === 'ecg') {
+        if (modalDesc) modalDesc.textContent = 'Bản ghi Điện tâm đồ 12 chuyển đạo - Ngày 09/10/2026 15:00';
+        if (graphic) {
+          graphic.innerHTML = `
+            <svg viewBox="0 0 500 120" style="width: 100%; max-height: 180px; stroke: #e11d48; fill: none; stroke-width: 2;">
+              <path d="M0,60 L40,60 L50,55 L60,65 L70,60 L90,60 L100,20 L110,100 L120,50 L130,65 L140,60 L200,60 L210,55 L220,65 L230,60 L250,60 L260,20 L270,100 L280,50 L290,65 L300,60 L360,60 L370,55 L380,65 L390,60 L410,60 L420,20 L430,100 L440,50 L450,65 L460,60 L500,60" />
+            </svg>
+            <p style="color: #0f172a; font-weight: 700; margin-top: 10px;">Điện tim thường: Nhịp xoang đều, tần số 68 chu kỳ/phút</p>
+            <span style="color: #16a34a; font-size: 0.85rem; font-weight: 600;"><i class="ri-checkbox-circle-fill"></i> Đã duyệt bởi BSCKI. Nguyễn Việt Anh lúc 16:58 ngày 09/10/2026</span>
+          `;
+        }
+      } else if (type === 'ultrasound') {
+        if (modalDesc) modalDesc.textContent = 'Hình ảnh Siêu âm ổ bụng màu 4D - Ngày 09/10/2026 15:00';
+        if (graphic) {
+          graphic.innerHTML = `
+            <div style="background: #0f172a; border-radius: 8px; padding: 24px; color: #38bdf8; text-align: center; width: 100%;">
+              <i class="ri-scan-2-line" style="font-size: 3.5rem; display: block; margin-bottom: 8px;"></i>
+              <span style="font-family: monospace; font-size: 0.85rem; color: #94a3b8;">HUNG VUONG HOSP | US ABDOMEN | GAIN 75% | FR 32Hz</span>
+              <p style="color: #f8fafc; font-weight: 600; margin-top: 8px;">Các cơ quan ổ bụng kích thước bình thường, không thấy dịch tự do</p>
+            </div>
+            <span style="color: #16a34a; font-size: 0.85rem; font-weight: 600; margin-top: 8px;"><i class="ri-checkbox-circle-fill"></i> Đã duyệt bởi Bác sĩ Tạ Thị Hà lúc 16:52 ngày 09/10/2026</span>
+          `;
+        }
+      } else {
+        if (modalDesc) modalDesc.textContent = 'Hình ảnh Nội soi Tai Mũi Họng HD - Ngày 09/10/2026 15:00';
+        if (graphic) {
+          graphic.innerHTML = `
+            <div style="background: #0f172a; border-radius: 8px; padding: 24px; color: #f43f5e; text-align: center; width: 100%;">
+              <i class="ri-camera-lens-line" style="font-size: 3.5rem; display: block; margin-bottom: 8px;"></i>
+              <span style="font-family: monospace; font-size: 0.85rem; color: #94a3b8;">ENT ENDOSCOPY HD | PENTAX MEDICAL | 09/10/2026</span>
+              <p style="color: #f8fafc; font-weight: 600; margin-top: 8px;">Hình ảnh Polyp khe mũi giữa 2 bên, niêm mạc nề tiết nhày</p>
+            </div>
+            <span style="color: #16a34a; font-size: 0.85rem; font-weight: 600; margin-top: 8px;"><i class="ri-checkbox-circle-fill"></i> Đã duyệt bởi Bác sĩ Lò Thị Xuân lúc 16:21 ngày 09/10/2026</span>
+          `;
+        }
+      }
+
+      modal?.classList.add('active');
+    }
+
+    function closeImageModal(e) {
+      document.getElementById('imageModal')?.classList.remove('active');
+    }
+
+    // Auto-check Supabase Database on Page Load
+    async function checkSupabasePatientData() {
+      const savedUserStr = localStorage.getItem('hospital_logged_user');
+      let currentPhone = '';
+
+      if (savedUserStr) {
+        try {
+          const user = JSON.parse(savedUserStr);
+          currentPhone = user.user_metadata?.phone || user.phone || '';
+        } catch(e) {}
+      }
+
+      if (currentPhone && supabaseClient) {
+        try {
+          const cleanPhone = currentPhone.replace(/\s+/g, '');
+          const { data, error } = await supabaseClient
+            .from('prescriptions')
+            .select('*')
+            .eq('phone', cleanPhone);
+
+          if (!error && data && data.length > 0) {
+            setPortalViewMode('seeded');
+            return;
+          } else if (!error && data && data.length === 0) {
+            setPortalViewMode('empty');
+            return;
+          }
+        } catch(err) {
+          console.warn('Supabase fetch check:', err);
+        }
+      }
+
+      // Default view
+      setPortalViewMode('seeded');
+    }
+
+    // Initial render
+    document.addEventListener('DOMContentLoaded', () => {
+      checkSupabasePatientData();
+    });
+  </script>
+
+</body>
+</html>

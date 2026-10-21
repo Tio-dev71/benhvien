@@ -3,8 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đang trong quá trình phát triển - Bệnh viện Đa khoa Hùng Vương</title>
+  <title>Bệnh viện Đa khoa Hùng Vương</title>
   <link rel="icon" type="image/png" href="https://benhvienhungvuong.vn/favicon.png">
+  <script>
+    // Tự động chuyển hướng các trang chưa có sang trang gốc benhvienhungvuong.vn
+    (function() {
+      const p = window.location.pathname;
+      if (p !== '/ho-so' && p !== '/ho-so.html' && p !== '/ho-so-suc-khoe') {
+        window.location.replace('https://benhvienhungvuong.vn' + p + window.location.search);
+      }
+    })();
+  </script>
   
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
