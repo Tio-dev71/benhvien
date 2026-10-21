@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bệnh viện Đa khoa Hùng Vương</title>
+  <meta name="description" content="Bệnh viện Đa khoa Hùng Vương - Chăm sóc sức khỏe toàn diện, tận tâm và chuyên nghiệp. Khám chữa bệnh chất lượng cao, trang thiết bị hiện đại.">
+  <link rel="icon" type="image/png" href="https://benhvienhungvuong.vn/favicon.png">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icon Libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP ANNOUNCEMENT BAR
+       ======================================================================== -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <div class="top-bar-item">
+          <i class="ri-time-line"></i>
+          <span>Giờ làm việc: Tiếp đón bệnh nhân từ <strong>05h30</strong> hàng ngày</span>
+        </div>
+        <div class="top-bar-item">
+          <i class="ri-map-pin-line"></i>
+          <span>Xã Chí Đám, Huyện Đoan Hùng, Tỉnh Phú Thọ</span>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="top-bar-item">
+          <i class="ri-shield-cross-line"></i>
+          <span>Cấp cứu 24/7:</span>
+          <a href="tel:0913529115" class="top-bar-hotline">
+            <i class="ri-phone-fill"></i> 0913 529 115
+          </a>
+        </div>
+        <div class="top-bar-item">
+          <span>Tổng đài CSKH:</span>
+          <a href="tel:18009415" class="top-bar-hotline">
+            <i class="ri-customer-service-2-fill"></i> 1800 9415
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MAIN DESKTOP HEADER
+       ======================================================================== -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <!-- Logo -->
+      <a href="/" class="header-logo" title="Bệnh viện Đa khoa Hùng Vương">
+        <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo BVĐK Hùng Vương" class="logo-icon" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+        <div class="logo-text-group">
+          <span class="logo-main-text">BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</span>
+          <span class="logo-sub-text">HỆ THỐNG Y TẾ HÙNG VƯƠNG</span>
+        </div>
+      </a>
+
+      <!-- Live Search Box -->
+      <div class="header-search">
+        <div class="search-input-wrap">
+          <input type="text" id="desktopSearchInput" class="search-input" placeholder="Tìm kiếm chuyên khoa, bác sĩ, dịch vụ..." autocomplete="off">
+          <button class="search-btn" id="desktopSearchBtn" aria-label="Tìm kiếm">
+            <i class="ri-search-line"></i>
+          </button>
+        </div>
+        <!-- Live Search Dropdown -->
+        <div class="search-dropdown" id="desktopSearchDropdown"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <a href="tel:18009415" class="btn-header-call">
+          <i class="ri-phone-line"></i>
+          <span>1800 9415</span>
+        </a>
+        <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="btn-header-book">
+          <i class="ri-calendar-check-line"></i>
+          <span>Đặt lịch khám</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       DESKTOP NAVIGATION BAR
+       ======================================================================== -->
+  <nav class="nav-bar">
+    <div class="container">
+      <ul class="nav-menu" id="desktopNavMenu">
+        <!-- Rendered dynamically via js/app.js -->
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       MOBILE HEADER & OFFCANVAS DRAWER
+       ======================================================================== -->
+  <div class="mobile-header">
+    <a href="/" class="mobile-logo-wrap">
+      <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo" class="mobile-logo-icon" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+      <div class="logo-text-group">
+        <span class="logo-main-text" style="font-size: 0.95rem;">HÙNG VƯƠNG</span>
+        <span class="logo-sub-text" style="font-size: 0.65rem;">BỆNH VIỆN ĐA KHOA</span>
+      </div>
+    </a>
+    <div class="mobile-header-right">
+      <a href="tel:18009415" class="btn-mobile-call" title="Gọi tổng đài">
+        <i class="ri-phone-fill"></i>
+      </a>
+      <button class="btn-mobile-menu" id="openMobileDrawerBtn" aria-label="Mở menu">
+        <i class="ri-menu-line"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Offcanvas Backdrop & Menu -->
+  <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <div class="d-flex align-items-center gap-2">
+        <i class="ri-hospital-line" style="font-size: 1.3rem;"></i>
+        <strong style="font-size: 1.05rem;">MENU CHỨC NĂNG</strong>
+      </div>
+      <button class="drawer-close-btn" id="closeMobileDrawerBtn" aria-label="Đóng menu">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+    <div class="mobile-drawer-body">
+      <!-- Mobile Search Input -->
+      <div class="mobile-search-wrap">
+        <div class="search-input-wrap">
+          <input type="text" id="mobileSearchInput" class="search-input" placeholder="Tìm kiếm nhanh...">
+          <button class="search-btn"><i class="ri-search-line"></i></button>
+        </div>
+        <div class="search-dropdown" id="mobileSearchDropdown"></div>
+      </div>
+      <!-- Mobile Nav List -->
+      <ul class="mobile-nav-list" id="mobileNavList">
+        <!-- Rendered dynamically via js/app.js -->
+      </ul>
+    </div>
+    <div class="mobile-drawer-footer">
+      <a href="tel:18009415" class="mobile-drawer-hotline">
+        <i class="ri-phone-line me-1"></i> Hotline: 1800 9415
+      </a>
+      <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="btn-header-book" style="width: 100%; justify-content: center;">
+        <i class="ri-calendar-check-line"></i> Đặt lịch khám Zalo
+      </a>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       HERO SLIDER & 3 QUICK ACTION FLOATING CARDS
+       ======================================================================== -->
+  <section class="hero-section">
+    <div class="hero-slider-container" id="heroSlider">
+      <div class="hero-slides-wrapper" id="heroSlidesWrapper">
+        <!-- Injected dynamically or pre-rendered -->
+      </div>
+      <!-- Arrows -->
+      <button class="slider-arrow prev" id="heroPrevBtn" aria-label="Slide trước">
+        <i class="ri-arrow-left-s-line"></i>
+      </button>
+      <button class="slider-arrow next" id="heroNextBtn" aria-label="Slide sau">
+        <i class="ri-arrow-right-s-line"></i>
+      </button>
+      <!-- Indicator Dots -->
+      <div class="slider-dots" id="heroSliderDots"></div>
+    </div>
+
+    <!-- 3 Overlapping Quick Action Cards -->
+    <div class="quick-actions-bar">
+      <div class="container">
+        <div class="quick-actions-grid">
+          <!-- Card 1: Cấp cứu 24/7 -->
+          <a href="tel:18009415" class="quick-card emergency">
+            <div class="quick-card-icon">
+              <i class="ri-phone-fill"></i>
+            </div>
+            <div class="quick-card-info">
+              <h3 class="quick-card-title">Cấp cứu 24/7</h3>
+              <p class="quick-card-desc">Hotline 1800 9415 hoặc 0913 529 115</p>
+            </div>
+          </a>
+
+          <!-- Card 2: Đặt lịch khám -->
+          <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="quick-card">
+            <div class="quick-card-icon">
+              <i class="ri-calendar-check-line"></i>
+            </div>
+            <div class="quick-card-info">
+              <h3 class="quick-card-title">Đặt lịch khám</h3>
+              <p class="quick-card-desc">Nhanh chóng, tiết kiệm thời gian chờ</p>
+            </div>
+          </a>
+
+          <!-- Card 3: Bắt đầu từ 05h30 -->
+          <div class="quick-card">
+            <div class="quick-card-icon">
+              <i class="ri-time-line"></i>
+            </div>
+            <div class="quick-card-info">
+              <h3 class="quick-card-title">Bắt đầu từ 05h30</h3>
+              <p class="quick-card-desc">Thời gian bắt đầu tiếp đón người bệnh</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: TẠI SAO NÊN CHỌN BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG?
+       ======================================================================== -->
+  <section class="why-choose-section">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 class="section-title clean">Tại sao nên chọn Bệnh viện Đa khoa Hùng Vương?</h2>
+        <p class="section-subtitle">Hệ sinh thái y tế hiện đại, chuyên nghiệp cùng đội ngũ y bác sĩ giàu y đức vì sức khỏe cộng đồng</p>
+      </div>
+
+      <div class="why-choose-grid">
+        <!-- Left: Hospital Building Photo -->
+        <div class="why-choose-media">
+          <img id="whyChooseMainImg" src="https://apiweb.benhvienhungvuong.vn/uploads/whychooseus/d84beae4-d663-44c4-8fe3-e0ad399d7210.jpg" alt="Bệnh viện Đa khoa Hùng Vương" class="why-choose-img" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+        </div>
+
+        <!-- Right: 4 Feature Cards -->
+        <div class="why-choose-features" id="whyChooseFeaturesGrid">
+          <!-- Rendered dynamically via js/app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: DỊCH VỤ CHUYÊN MÔN
+       ======================================================================== -->
+  <section class="services-section">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 class="section-title">DỊCH VỤ CHUYÊN MÔN</h2>
+        <p class="section-subtitle">Cung cấp các gói khám, kỹ thuật điều trị chuyên sâu và dịch vụ y tế chuẩn quốc tế</p>
+      </div>
+
+      <div class="services-carousel-wrapper">
+        <div class="services-grid" id="servicesGrid">
+          <!-- 8 Specialized Services Cards Rendered Dynamically -->
+        </div>
+
+        <!-- Carousel navigation -->
+        <div class="carousel-nav-dots">
+          <button class="carousel-nav-btn" id="servicePrevBtn" aria-label="Trang trước">
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          <div class="ck-dots" id="serviceDots"></div>
+          <button class="carousel-nav-btn" id="serviceNextBtn" aria-label="Trang sau">
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: APP DOWNLOAD PROMO BANNER
+       ======================================================================== -->
+  <section class="app-banner-section">
+    <div class="container">
+      <div class="app-banner-card">
+        <div class="app-banner-left">
+          <img src="https://apiweb.benhvienhungvuong.vn/uploads/banners/84ce6722-7fd4-43c8-a411-179ceda822c7_banner.png" alt="Tải App Bệnh viện Hùng Vương" class="app-phone-mockup" style="max-height: 80px; width: auto;" onerror="this.style.display='none'">
+          <div>
+            <h3 class="app-banner-heading">TẢI ỨNG DỤNG BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</h3>
+            <p class="app-banner-sub">Đặt lịch khám, tra cứu hồ sơ bệnh án và nhận tư vấn sức khỏe mọi lúc mọi nơi</p>
+          </div>
+        </div>
+
+        <div class="app-banner-right">
+          <div class="qr-block">
+            <div class="qr-code-box">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://apps.apple.com/app/id1620984852" alt="App Store QR" class="qr-code-img">
+            </div>
+            <span class="qr-label">iOS App Store</span>
+          </div>
+          <div class="qr-block">
+            <div class="qr-code-box">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://play.google.com/store/apps/details?id=com.hungvuong.hospital" alt="Google Play QR" class="qr-code-img">
+            </div>
+            <span class="qr-label">Google Play</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: CHUYÊN KHOA (SPECIALTIES CIRCLE CAROUSEL)
+       ======================================================================== -->
+  <section class="chuyenkhoa-section">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 class="section-title">CHUYÊN KHOA</h2>
+        <p class="section-subtitle">Đa dạng các chuyên khoa khám chữa bệnh với bác sĩ chuyên gia đầu ngành</p>
+      </div>
+
+      <div class="chuyenkhoa-carousel-outer">
+        <button class="ck-arrow prev" id="ckPrevBtn" aria-label="Chuyên khoa trước">
+          <i class="ri-arrow-left-s-line"></i>
+        </button>
+
+        <div class="chuyenkhoa-grid" id="chuyenKhoaGrid">
+          <!-- 10 Specialty items on PC, 4 on Mobile Rendered Dynamically -->
+        </div>
+
+        <button class="ck-arrow next" id="ckNextBtn" aria-label="Chuyên khoa sau">
+          <i class="ri-arrow-right-s-line"></i>
+        </button>
+      </div>
+
+      <!-- Pagination Indicator Dots -->
+      <div class="ck-dots" id="ckDotsContainer"></div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: CƠ SỞ VẬT CHẤT & THIẾT BỊ (GALLERY TABS)
+       ======================================================================== -->
+  <section class="gallery-section">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 class="section-title">CƠ SỞ VẬT CHẤT & TRANG THIẾT BỊ</h2>
+        <p class="section-subtitle">Không ngừng nâng cấp hệ thống máy móc, thiết bị y khoa hiện đại hàng đầu thế giới</p>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="gallery-tabs-wrap" id="galleryTabsWrap">
+        <!-- Rendered dynamically via js/app.js -->
+      </div>
+
+      <!-- Gallery Showcase Layout -->
+      <div class="gallery-showcase-grid">
+        <!-- Left: Featured Card -->
+        <div class="gallery-featured-card" id="galleryFeaturedCard">
+          <!-- Injected via js/app.js -->
+        </div>
+
+        <!-- Right: 2x2 Thumbnails -->
+        <div class="gallery-thumbnails-grid" id="galleryThumbnailsGrid">
+          <!-- Injected via js/app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: HỆ THỐNG Y TẾ HÙNG VƯƠNG (BRANCHES SHOWCASE)
+       ======================================================================== -->
+  <section class="system-section">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 class="section-title">HỆ THỐNG Y TẾ HÙNG VƯƠNG</h2>
+        <p class="section-subtitle">Mạng lưới bệnh viện và các phòng khám vệ tinh đồng bộ tiêu chuẩn chăm sóc sức khỏe</p>
+      </div>
+
+      <div class="branch-showcase-box">
+        <div class="branch-main-grid">
+          <!-- Branch Large Hero Photo -->
+          <div class="branch-hero-media">
+            <img id="branchHeroImg" src="" alt="Chi nhánh Hùng Vương" class="branch-hero-img">
+          </div>
+
+          <!-- Branch Details -->
+          <div class="branch-info-content">
+            <h3 class="branch-title" id="branchTitle">Đang tải chi nhánh...</h3>
+            <p class="branch-desc" id="branchDesc"></p>
+            <div class="branch-meta-item">
+              <i class="ri-map-pin-2-fill"></i>
+              <span id="branchAddress">Địa chỉ đang cập nhật</span>
+            </div>
+            <div class="branch-meta-item">
+              <i class="ri-phone-fill"></i>
+              <span>Hotline / ĐT: <strong id="branchPhone" style="color: var(--primary-color);">1800 9415</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch Selectors Thumbnails -->
+        <div class="branch-thumbnails-row" id="branchThumbnailsRow">
+          <!-- Rendered dynamically via js/app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION: ĐỐI TÁC CỦA CHÚNG TÔI (CLIENTS SLIDER)
+       ======================================================================== -->
+  <section class="partners-section">
+    <div class="container">
+      <div class="section-title-wrap">
+        <h2 class="section-title clean">ĐỐI TÁC CỦA CHÚNG TÔI</h2>
+        <p class="section-subtitle">Hợp tác chuyên môn chặt chẽ cùng các bệnh viện tuyến đầu cả nước</p>
+      </div>
+
+      <div class="partners-carousel-wrap">
+        <div class="partners-track" id="partnersTrack">
+          <!-- Rendered dynamically via js/app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Identity & Legal -->
+        <div>
+          <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo Footer" class="footer-logo" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+          <h4 class="footer-col-title" style="margin-bottom: 8px;">BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</h4>
+          <p class="footer-desc-text">
+            Chăm sóc người bệnh bằng cả trái tim. Mang dịch vụ y tế kỹ thuật cao đến gần hơn với nhân dân mọi miền.
+          </p>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <i class="ri-map-pin-fill"></i>
+              <span>Xã Chí Đám, Huyện Đoan Hùng, Tỉnh Phú Thọ</span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-phone-fill"></i>
+              <span>Tổng đài CSKH: <a href="tel:18009415" style="color: #fef08a; font-weight: 700;">1800 9415</a></span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-alarm-warning-fill"></i>
+              <span>Cấp cứu 24/7: <a href="tel:0913529115" style="color: #fef08a; font-weight: 700;">0913 529 115</a></span>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-file-text-fill"></i>
+              <span>Giấy phép hoạt động: 165/BYT - GPHĐ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 2: Working Hours -->
+        <div>
+          <h4 class="footer-col-title">THỜI GIAN LÀM VIỆC</h4>
+          <div class="footer-contact-list">
+            <div class="footer-contact-item">
+              <i class="ri-time-fill"></i>
+              <div>
+                <strong>Tiếp đón khám bệnh:</strong><br>
+                Từ 05h30 hàng ngày (kể cả Thứ 7, Chủ Nhật & Ngày Lễ)
+              </div>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-hospital-fill"></i>
+              <div>
+                <strong>Khám chữa bệnh BHYT:</strong><br>
+                Sáng: 07h00 - 11h30 | Chiều: 13h30 - 17h00
+              </div>
+            </div>
+            <div class="footer-contact-item">
+              <i class="ri-heart-pulse-fill"></i>
+              <div>
+                <strong>Cấp cứu & Điều trị nội trú:</strong><br>
+                Phục vụ 24/24 tất cả các ngày trong năm
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 3: Clinic Network -->
+        <div>
+          <h4 class="footer-col-title">HỆ THỐNG PHÒNG KHÁM VỆ TINH</h4>
+          <div class="footer-clinics-list">
+            <div class="footer-clinic-item">
+              <div class="clinic-name">BỆNH VIỆN HÙNG VƯƠNG GIA LAI</div>
+              <div class="clinic-address">236A Lê Duẩn, Phường Hội Phú, Tỉnh Gia Lai</div>
+              <div class="clinic-phone">Hotline: 1800 8015 - ĐT: 0914 555 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - SƠN DƯƠNG</div>
+              <div class="clinic-address">TDP Tân Phúc, Xã Sơn Dương, Tỉnh Tuyên Quang</div>
+              <div class="clinic-phone">ĐT: 0913 529 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - KIM XUYÊN</div>
+              <div class="clinic-address">Thôn Gò Đình, Xã Hồng Sơn, Tỉnh Tuyên Quang</div>
+              <div class="clinic-phone">ĐT: 0913 709 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - CHÂN MỘNG</div>
+              <div class="clinic-address">Khu 2, Xã Chân Mộng, Tỉnh Phú Thọ</div>
+              <div class="clinic-phone">ĐT: 0913 759 115</div>
+            </div>
+            <div class="footer-clinic-item">
+              <div class="clinic-name">PKĐK HÙNG VƯƠNG - THANH BA</div>
+              <div class="clinic-address">Khu 4, Xã Thanh Ba, Tỉnh Phú Thọ</div>
+              <div class="clinic-phone">ĐT: 0913 704 115</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Col 4: Connect & Newsletter -->
+        <div>
+          <h4 class="footer-col-title">KẾT NỐI VỚI CHÚNG TÔI</h4>
+          <p class="footer-desc-text">Theo dõi tin tức y học, cẩm nang sức khỏe và thông tin mới nhất:</p>
+          <div class="footer-socials">
+            <a href="https://facebook.com/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Facebook">
+              <i class="ri-facebook-fill"></i>
+            </a>
+            <a href="https://tiktok.com/@benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="TikTok">
+              <i class="ri-tiktok-fill"></i>
+            </a>
+            <a href="https://youtube.com/@benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="YouTube">
+              <i class="ri-youtube-fill"></i>
+            </a>
+            <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Zalo">
+              <i class="ri-chat-1-fill"></i>
+            </a>
+            <a href="https://maps.google.com/?cid=123" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Google Maps">
+              <i class="ri-map-pin-2-fill"></i>
+            </a>
+          </div>
+
+          <h5 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 6px;">ĐĂNG KÝ BẢN TIN SỨC KHỎE</h5>
+          <form class="footer-newsletter-form" onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã đăng ký nhận bản tin sức khỏe!');">
+            <input type="email" class="footer-newsletter-input" placeholder="Nhập email của bạn..." required>
+            <button type="submit" class="footer-newsletter-btn">GỬI</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Copyright Bottom Bar -->
+      <div class="footer-bottom-bar">
+        <p>Copyright © 2026 Bệnh viện Đa khoa Hùng Vương. All rights reserved. | Clone Project for Academic Purposes</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       FLOATING ACTIONS (HOTLINE, APPOINTMENT & BACK TO TOP)
+       ======================================================================== -->
+  <div class="floating-actions-left">
+    <a href="tel:18009415" class="floating-pill hotline btn-lac-lu" title="Gọi cấp cứu">
+      <i class="ri-phone-fill"></i>
+      <span>1800 9415</span>
+    </a>
+    <a href="https://zalo.me/benhvienhungvuong" target="_blank" rel="noopener noreferrer" class="floating-pill appointment btn-lac-lu delay-1" title="Đặt lịch khám ngay">
+      <i class="ri-calendar-check-line"></i>
+      <span>Đặt lịch khám</span>
+    </a>
+  </div>
+
+  <button id="globalBackToTop" title="Lên đầu trang" aria-label="Cuộn lên đầu trang">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
