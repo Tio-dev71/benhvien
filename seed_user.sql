@@ -215,6 +215,23 @@ BEGIN
         encrypted_pw := crypt(target_password, gen_salt('bf'));
     END;
 
+    -- SỬA LỖI TOÀN BỘ CỘT NULL TRONG auth.users ĐỂ TRÁNH LỖI "Database error querying schema"
+    UPDATE auth.users
+    SET 
+        confirmation_token = COALESCE(confirmation_token, ''),
+        recovery_token = COALESCE(recovery_token, ''),
+        email_change_token_new = COALESCE(email_change_token_new, ''),
+        email_change = COALESCE(email_change, ''),
+        phone_change = COALESCE(phone_change, ''),
+        phone_change_token = COALESCE(phone_change_token, ''),
+        email_change_token_current = COALESCE(email_change_token_current, ''),
+        reauthentication_token = COALESCE(reauthentication_token, '')
+    WHERE 
+        confirmation_token IS NULL 
+        OR recovery_token IS NULL 
+        OR email_change_token_new IS NULL 
+        OR email_change IS NULL;
+
     -- 1. TỰ ĐỘNG TẠO HOẶC CẬP NHẬT MẬT KHẨU TÀI KHOẢN TRONG auth.users
     SELECT id INTO v_user_id FROM auth.users WHERE email = target_email;
 
@@ -228,6 +245,14 @@ BEGIN
             email,
             encrypted_password,
             email_confirmed_at,
+            confirmation_token,
+            recovery_token,
+            email_change_token_new,
+            email_change,
+            phone_change,
+            phone_change_token,
+            email_change_token_current,
+            reauthentication_token,
             raw_app_meta_data,
             raw_user_meta_data,
             created_at,
@@ -240,6 +265,7 @@ BEGIN
             target_email,
             encrypted_pw,
             NOW(),
+            '', '', '', '', '', '', '', '',
             '{"provider":"email","providers":["email"]}'::jsonb,
             jsonb_build_object('phone', target_phone, 'full_name', v_name),
             NOW(),
@@ -272,6 +298,14 @@ BEGIN
         SET encrypted_password = encrypted_pw,
             raw_user_meta_data = jsonb_build_object('phone', target_phone, 'full_name', v_name),
             email_confirmed_at = COALESCE(email_confirmed_at, NOW()),
+            confirmation_token = COALESCE(confirmation_token, ''),
+            recovery_token = COALESCE(recovery_token, ''),
+            email_change_token_new = COALESCE(email_change_token_new, ''),
+            email_change = COALESCE(email_change, ''),
+            phone_change = COALESCE(phone_change, ''),
+            phone_change_token = COALESCE(phone_change_token, ''),
+            email_change_token_current = COALESCE(email_change_token_current, ''),
+            reauthentication_token = COALESCE(reauthentication_token, ''),
             updated_at = NOW()
         WHERE id = v_user_id;
 
