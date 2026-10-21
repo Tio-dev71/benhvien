@@ -1,41 +1,206 @@
 -- =========================================================================
 -- BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG - LỆNH CẤP TÀI KHOẢN & HỒ SƠ BỆNH ÁN
 -- HƯỚNG DẪN:
--- 1. Bạn chỉ cần sửa 2 dòng cấu hình ngay dưới đây:
+-- 1. Bạn có thể sửa số điện thoại và mật khẩu ở dòng 120 - 121 (nếu muốn đổi user):
 --    - target_phone    : Số điện thoại đăng nhập (ví dụ: '0338976909')
---    - target_password : Mật khẩu đăng nhập (mặc định: '123456')
--- 2. Dán toàn bộ file này vào Supabase -> SQL Editor -> Nhấn RUN.
--- Lệnh sẽ tự động:
---    - Tạo tài khoản đăng nhập + mã hóa mật khẩu trên Supabase Auth (hoặc cập nhật nếu đã có)
---    - Nạp toàn bộ Hồ sơ bệnh án: Lịch sử khám, Kết quả cận lâm sàng, Đơn thuốc.
+--    - target_password : Mật khẩu đăng nhập (ví dụ: '070306')
+-- 2. Dán TOÀN BỘ file này vào Supabase -> SQL Editor -> Nhấn RUN.
+-- Script tự động:
+--    - Tự động sửa kiểu dữ liệu visit_date sang TEXT và gỡ ràng buộc cũ nếu có.
+--    - Tạo tài khoản đăng nhập + mã hóa mật khẩu trên Supabase Auth (hoặc cập nhật nếu đã có).
+--    - Nạp toàn bộ Hồ sơ bệnh án: Lịch sử khám, Kết quả cận lâm sàng (4 xét nghiệm), Đơn thuốc.
 -- =========================================================================
 
--- Đảm bảo các bảng có đầy đủ các cột nghiệp vụ
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+
+-- =========================================================================
+-- BƯỚC 1: TỰ ĐỘNG CHUẨN HÓA CẤU TRÚC BẢNG (FIX LỖI KIỂU DATE VÀ RÀNG BUỘC CŨ)
+-- =========================================================================
+DO $$
+BEGIN
+    -- 1. Xử lý bảng public.medical_history
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'medical_history') THEN
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'medical_history' AND column_name = 'visit_code') THEN
+            ALTER TABLE public.medical_history ALTER COLUMN visit_code DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'medical_history' AND column_name = 'department') THEN
+            ALTER TABLE public.medical_history ALTER COLUMN department DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'medical_history' AND column_name = 'doctor_name') THEN
+            ALTER TABLE public.medical_history ALTER COLUMN doctor_name DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'medical_history' AND column_name = 'reason') THEN
+            ALTER TABLE public.medical_history ALTER COLUMN reason DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'medical_history' AND column_name = 'diagnosis') THEN
+            ALTER TABLE public.medical_history ALTER COLUMN diagnosis DROP NOT NULL;
+        END IF;
+        
+        -- Chuyển visit_date sang TEXT nếu đang là DATE/TIMESTAMP
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'medical_history' AND column_name = 'visit_date') THEN
+            ALTER TABLE public.medical_history ALTER COLUMN visit_date DROP DEFAULT;
+            ALTER TABLE public.medical_history ALTER COLUMN visit_date TYPE TEXT USING visit_date::text;
+            ALTER TABLE public.medical_history ALTER COLUMN visit_date SET DEFAULT '09/10/2026 14:04';
+        ELSE
+            ALTER TABLE public.medical_history ADD COLUMN visit_date TEXT DEFAULT '09/10/2026 14:04';
+        END IF;
+    END IF;
+
+    -- 2. Xử lý bảng public.lab_results
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'lab_results') THEN
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'test_code') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN test_code DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'test_name') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN test_name DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'category') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN category DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'doctor_name') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN doctor_name DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'test_date') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN test_date DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'details') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN details DROP NOT NULL;
+        END IF;
+
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'lab_results' AND column_name = 'visit_date') THEN
+            ALTER TABLE public.lab_results ALTER COLUMN visit_date DROP DEFAULT;
+            ALTER TABLE public.lab_results ALTER COLUMN visit_date TYPE TEXT USING visit_date::text;
+            ALTER TABLE public.lab_results ALTER COLUMN visit_date SET DEFAULT '09/10/2026 14:04';
+        ELSE
+            ALTER TABLE public.lab_results ADD COLUMN visit_date TEXT DEFAULT '09/10/2026 14:04';
+        END IF;
+    END IF;
+
+    -- 3. Xử lý bảng public.prescriptions
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'prescriptions') THEN
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'prescriptions' AND column_name = 'prescription_code') THEN
+            ALTER TABLE public.prescriptions ALTER COLUMN prescription_code DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'prescriptions' AND column_name = 'doctor_name') THEN
+            ALTER TABLE public.prescriptions ALTER COLUMN doctor_name DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'prescriptions' AND column_name = 'department') THEN
+            ALTER TABLE public.prescriptions ALTER COLUMN department DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'prescriptions' AND column_name = 'diagnosis') THEN
+            ALTER TABLE public.prescriptions ALTER COLUMN diagnosis DROP NOT NULL;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'prescriptions' AND column_name = 'prescription_date') THEN
+            ALTER TABLE public.prescriptions ALTER COLUMN prescription_date DROP NOT NULL;
+        END IF;
+
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'prescriptions' AND column_name = 'visit_date') THEN
+            ALTER TABLE public.prescriptions ALTER COLUMN visit_date DROP DEFAULT;
+            ALTER TABLE public.prescriptions ALTER COLUMN visit_date TYPE TEXT USING visit_date::text;
+            ALTER TABLE public.prescriptions ALTER COLUMN visit_date SET DEFAULT '09/10/2026 14:04';
+        ELSE
+            ALTER TABLE public.prescriptions ADD COLUMN visit_date TEXT DEFAULT '09/10/2026 14:04';
+        END IF;
+    END IF;
+END $$;
+
+-- Tạo bảng chuẩn nếu chưa tồn tại
+CREATE TABLE IF NOT EXISTS public.medical_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    phone TEXT NOT NULL,
+    patient_code TEXT NOT NULL DEFAULT '2600168496',
+    patient_name TEXT NOT NULL DEFAULT 'NGUYỄN KIỀU LINH',
+    hospital_name TEXT NOT NULL DEFAULT '[25329] Bệnh viện đa khoa Tư nhân Hùng Vương',
+    visit_date TEXT NOT NULL DEFAULT '09/10/2026 14:04',
+    treatment_type TEXT NOT NULL DEFAULT 'Ngoại trú',
+    symptoms TEXT DEFAULT '',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.lab_results (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    phone TEXT NOT NULL,
+    patient_code TEXT NOT NULL DEFAULT '2600168496',
+    patient_name TEXT NOT NULL DEFAULT 'NGUYỄN KIỀU LINH',
+    visit_date TEXT NOT NULL DEFAULT '09/10/2026 14:04',
+    test_title TEXT NOT NULL,
+    doctor_reading TEXT NOT NULL,
+    readings JSONB DEFAULT '[]'::jsonb,
+    conclusion TEXT NOT NULL,
+    has_image BOOLEAN DEFAULT true,
+    display_order INT DEFAULT 1,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.prescriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    phone TEXT NOT NULL,
+    patient_code TEXT NOT NULL DEFAULT '2600168496',
+    patient_name TEXT NOT NULL DEFAULT 'NGUYỄN KIỀU LINH',
+    visit_date TEXT NOT NULL DEFAULT '09/10/2026 14:04',
+    items JSONB NOT NULL DEFAULT '[]'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Bổ sung đầy đủ các cột nghiệp vụ
 ALTER TABLE IF EXISTS public.medical_history ADD COLUMN IF NOT EXISTS patient_code TEXT DEFAULT '2600168496';
 ALTER TABLE IF EXISTS public.medical_history ADD COLUMN IF NOT EXISTS patient_name TEXT DEFAULT 'NGUYỄN KIỀU LINH';
 ALTER TABLE IF EXISTS public.medical_history ADD COLUMN IF NOT EXISTS hospital_name TEXT DEFAULT '[25329] Bệnh viện đa khoa Tư nhân Hùng Vương';
 ALTER TABLE IF EXISTS public.medical_history ADD COLUMN IF NOT EXISTS treatment_type TEXT DEFAULT 'Ngoại trú';
 ALTER TABLE IF EXISTS public.medical_history ADD COLUMN IF NOT EXISTS symptoms TEXT DEFAULT '';
+ALTER TABLE IF EXISTS public.medical_history ADD COLUMN IF NOT EXISTS visit_date TEXT DEFAULT '09/10/2026 14:04';
 
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS patient_code TEXT DEFAULT '2600168496';
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS patient_name TEXT DEFAULT 'NGUYỄN KIỀU LINH';
+ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS visit_date TEXT DEFAULT '09/10/2026 14:04';
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS test_title TEXT;
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS doctor_reading TEXT;
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS readings JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS conclusion TEXT DEFAULT '';
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS has_image BOOLEAN DEFAULT true;
 ALTER TABLE IF EXISTS public.lab_results ADD COLUMN IF NOT EXISTS display_order INT DEFAULT 1;
 
 ALTER TABLE IF EXISTS public.prescriptions ADD COLUMN IF NOT EXISTS patient_code TEXT DEFAULT '2600168496';
 ALTER TABLE IF EXISTS public.prescriptions ADD COLUMN IF NOT EXISTS patient_name TEXT DEFAULT 'NGUYỄN KIỀU LINH';
 ALTER TABLE IF EXISTS public.prescriptions ADD COLUMN IF NOT EXISTS visit_date TEXT DEFAULT '09/10/2026 14:04';
+ALTER TABLE IF EXISTS public.prescriptions ADD COLUMN IF NOT EXISTS items JSONB DEFAULT '[]'::jsonb;
 
+-- BẬT RLS & CHÍNH SÁCH ĐỌC GHI CÔNG KHAI
+ALTER TABLE public.medical_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.lab_results ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.prescriptions ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public read medical_history" ON public.medical_history;
+CREATE POLICY "Public read medical_history" ON public.medical_history FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public insert medical_history" ON public.medical_history;
+CREATE POLICY "Public insert medical_history" ON public.medical_history FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Public delete medical_history" ON public.medical_history;
+CREATE POLICY "Public delete medical_history" ON public.medical_history FOR DELETE USING (true);
+DROP POLICY IF EXISTS "Public update medical_history" ON public.medical_history FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Public read lab_results" ON public.lab_results;
+CREATE POLICY "Public read lab_results" ON public.lab_results FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public insert lab_results" ON public.lab_results;
+CREATE POLICY "Public insert lab_results" ON public.lab_results FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Public delete lab_results" ON public.lab_results FOR DELETE USING (true);
+DROP POLICY IF EXISTS "Public update lab_results" ON public.lab_results FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Public read prescriptions" ON public.prescriptions;
+CREATE POLICY "Public read prescriptions" ON public.prescriptions FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public insert prescriptions" ON public.prescriptions;
+CREATE POLICY "Public insert prescriptions" ON public.prescriptions FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Public delete prescriptions" ON public.prescriptions;
+CREATE POLICY "Public delete prescriptions" ON public.prescriptions FOR DELETE USING (true);
+DROP POLICY IF EXISTS "Public update prescriptions" ON public.prescriptions FOR UPDATE USING (true);
+
+-- =========================================================================
+-- BƯỚC 2: TẠO TÀI KHOẢN VÀ NẠP HỒ SƠ BỆNH ÁN
+-- =========================================================================
 DO $$
 DECLARE
-    -- =====================================================================
-    -- ✍️ [CẤU HÌNH TÀI KHOẢN VÀ MẬT KHẨU TẠI ĐÂY]
-    -- =====================================================================
-    target_phone    TEXT := '0338976909';       -- 👉 Số điện thoại đăng nhập
-    target_password TEXT := '070306';           -- 👉 Mật khẩu đăng nhập của user
+    -- 👉 Cấu hình tài khoản và thông tin bệnh nhân
+    target_phone    TEXT := '0338976909';       -- Số điện thoại đăng nhập
+    target_password TEXT := '070306';           -- Mật khẩu đăng nhập
     v_code          TEXT := '2600168496';       -- Mã bệnh nhân
     v_name          TEXT := 'NGUYỄN KIỀU LINH'; -- Họ và tên bệnh nhân
     v_date          TEXT := '09/10/2026 14:04'; -- Ngày khám bệnh (09/10/2026)
@@ -45,11 +210,14 @@ DECLARE
     encrypted_pw    TEXT;
 BEGIN
     target_email := target_phone || '@hungvuong.hospital';
-    encrypted_pw := extensions.crypt(target_password, extensions.gen_salt('bf'));
+    
+    BEGIN
+        encrypted_pw := extensions.crypt(target_password, extensions.gen_salt('bf'));
+    EXCEPTION WHEN OTHERS THEN
+        encrypted_pw := crypt(target_password, gen_salt('bf'));
+    END;
 
-    -- =====================================================================
     -- 1. TỰ ĐỘNG TẠO HOẶC CẬP NHẬT MẬT KHẨU TÀI KHOẢN TRONG auth.users
-    -- =====================================================================
     SELECT id INTO v_user_id FROM auth.users WHERE email = target_email;
 
     IF v_user_id IS NULL THEN
@@ -105,22 +273,19 @@ BEGIN
         UPDATE auth.users
         SET encrypted_password = encrypted_pw,
             raw_user_meta_data = jsonb_build_object('phone', target_phone, 'full_name', v_name),
+            email_confirmed_at = COALESCE(email_confirmed_at, NOW()),
             updated_at = NOW()
         WHERE id = v_user_id;
 
         RAISE NOTICE '🔄 ĐÃ CẬP NHẬT MẬT KHẨU: SĐT % | Mật khẩu mới: %', target_phone, target_password;
     END IF;
 
-    -- =====================================================================
     -- 2. XÓA DỮ LIỆU CŨ CỦA USER NÀY NẾU CÓ ĐỂ NẠP LẠI MỚI NHẤT
-    -- =====================================================================
     DELETE FROM public.medical_history WHERE phone = target_phone;
     DELETE FROM public.lab_results WHERE phone = target_phone;
     DELETE FROM public.prescriptions WHERE phone = target_phone;
 
-    -- =====================================================================
     -- 3. NẠP LỊCH SỬ KHÁM BỆNH (Ảnh 1)
-    -- =====================================================================
     INSERT INTO public.medical_history (
         phone, patient_code, patient_name, hospital_name, visit_date, treatment_type, symptoms
     ) VALUES (
@@ -133,10 +298,8 @@ BEGIN
         ''
     );
 
-    -- =====================================================================
     -- 4. NẠP KẾT QUẢ CẬN LÂM SÀNG (Ảnh 2, 3, 4)
-    -- =====================================================================
-    -- Xét nghiệm 1: Điện tim thường
+    -- Xét nghiệm 1: Điện tim thường (BS Nguyễn Việt Anh)
     INSERT INTO public.lab_results (
         phone, patient_code, patient_name, visit_date, test_title, doctor_reading, readings, conclusion, has_image, display_order
     ) VALUES (
@@ -150,7 +313,7 @@ Trục trung gian',
         1
     );
 
-    -- Xét nghiệm 2: Siêu âm ổ bụng
+    -- Xét nghiệm 2: Siêu âm ổ bụng (BS Tạ Thị Hà)
     INSERT INTO public.lab_results (
         phone, patient_code, patient_name, visit_date, test_title, doctor_reading, readings, conclusion, has_image, display_order
     ) VALUES (
@@ -178,7 +341,7 @@ Trục trung gian',
         2
     );
 
-    -- Xét nghiệm 3: Khám chuyên khoa Tai – Mũi – Họng
+    -- Xét nghiệm 3: Khám chuyên khoa Tai – Mũi – Họng (BS Lò Thị Xuân)
     INSERT INTO public.lab_results (
         phone, patient_code, patient_name, visit_date, test_title, doctor_reading, readings, conclusion, has_image, display_order
     ) VALUES (
@@ -204,7 +367,7 @@ Trục trung gian',
         3
     );
 
-    -- Xét nghiệm 4: Chụp X-quang ngực thẳng [số hóa 1 phim]
+    -- Xét nghiệm 4: Chụp X-quang ngực thẳng [số hóa 1 phim] (BS Đào Văn Trí)
     INSERT INTO public.lab_results (
         phone, patient_code, patient_name, visit_date, test_title, doctor_reading, readings, conclusion, has_image, display_order
     ) VALUES (
@@ -224,9 +387,7 @@ Trục trung gian',
         4
     );
 
-    -- =====================================================================
     -- 5. NẠP ĐƠN THUỐC (Ảnh 5)
-    -- =====================================================================
     INSERT INTO public.prescriptions (
         phone, patient_code, patient_name, visit_date, items
     ) VALUES (
