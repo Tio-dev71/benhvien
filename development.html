@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đang trong quá trình phát triển - Bệnh viện Đa khoa Hùng Vương</title>
+  <link rel="icon" type="image/png" href="https://benhvienhungvuong.vn/favicon.png">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icon Libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .dev-page-wrapper {
+      min-height: calc(100vh - 280px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      background: radial-gradient(circle at 50% 30%, #f0f7fd 0%, #fafbfc 70%);
+    }
+
+    .dev-card-center {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 50px 40px;
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(18, 116, 188, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e1edf6;
+      position: relative;
+      animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.95) translateY(15px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .dev-icon-wrapper {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 24px auto;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e0f0fc 0%, #cce5f8 100%);
+      color: #1274bc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(18, 116, 188, 0.15);
+    }
+
+    .dev-icon-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 32px;
+      height: 32px;
+      background: #c50c03;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      border: 2px solid #ffffff;
+      animation: hieuUngLacLu 2.5s infinite ease-in-out;
+    }
+
+    .dev-badge-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      background: #eef7fc;
+      color: #1274bc;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border-radius: 50px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      border: 1px solid #cce5f8;
+    }
+
+    .dev-title {
+      color: #0c3866;
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    .dev-slug-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      color: #475569;
+      display: inline-block;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+
+    .dev-description {
+      color: #64748b;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .dev-actions-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-dev-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      background: linear-gradient(135deg, #1274bc 0%, #0085db 100%);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 14px rgba(18, 116, 188, 0.28);
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-dev-home:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(18, 116, 188, 0.4);
+      color: #ffffff;
+    }
+
+    .btn-dev-call {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: #ffffff;
+      color: #c50c03;
+      border: 1.5px solid #c50c03;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 50px;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+
+    .btn-dev-call:hover {
+      background: #c50c03;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <div class="top-bar-item">
+          <i class="ri-hospital-line"></i>
+          <span>Hệ thống Y tế Hùng Vương - Bệnh viện Đa khoa Hùng Vương</span>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="top-bar-item">
+          <span>Tổng đài CSKH:</span>
+          <a href="tel:18009415" class="top-bar-hotline">
+            <i class="ri-phone-fill"></i> 1800 9415
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <a href="/" class="header-logo" title="Bệnh viện Đa khoa Hùng Vương">
+        <img src="https://apiweb.benhvienhungvuong.vn/uploads/settings/d81c470a-7023-44ce-9fd7-b35f29910e54_logo_BVHV.png" alt="Logo" class="logo-icon" onerror="this.src='https://benhvienhungvuong.vn/favicon.png'">
+        <div class="logo-text-group">
+          <span class="logo-main-text">BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</span>
+          <span class="logo-sub-text">HỆ THỐNG Y TẾ HÙNG VƯƠNG</span>
+        </div>
+      </a>
+      <div class="header-actions">
+        <a href="/" class="btn-header-call">
+          <i class="ri-home-4-line"></i>
+          <span>Về trang chủ</span>
+        </a>
+        <a href="tel:18009415" class="btn-header-book">
+          <i class="ri-phone-line"></i>
+          <span>Hotline: 1800 9415</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Center Under Development Section -->
+  <main class="dev-page-wrapper">
+    <div class="dev-card-center">
+      <div class="dev-icon-wrapper">
+        <i class="ri-tools-fill"></i>
+        <div class="dev-icon-badge">
+          <i class="ri-time-line"></i>
+        </div>
+      </div>
+
+      <span class="dev-badge-tag">Hệ Thống Y Tế Hùng Vương</span>
+
+      <h1 class="dev-title">Trang đang trong quá trình phát triển</h1>
+
+      <div class="dev-slug-box" id="devSlugDisplay">
+        <i class="ri-links-line me-1"></i> <span id="currentPathText">Đang tải đường dẫn...</span>
+      </div>
+
+      <p class="dev-description">
+        Chuyên mục và nội dung chi tiết này đang được đội ngũ kỹ thuật & y bác sĩ Bệnh viện Đa khoa Hùng Vương hoàn thiện để mang đến trải nghiệm đầy đủ và chính xác nhất cho người bệnh.
+      </p>
+
+      <div class="dev-actions-row">
+        <a href="/" class="btn-dev-home">
+          <i class="ri-arrow-left-line"></i> Quay về Trang chủ
+        </a>
+        <a href="tel:18009415" class="btn-dev-call">
+          <i class="ri-customer-service-2-fill"></i> Hỗ trợ: 1800 9415
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="padding: 25px 0;">
+    <div class="container text-center" style="font-size: 0.88rem; opacity: 0.9;">
+      <p style="margin-bottom: 4px;"><strong>BỆNH VIỆN ĐA KHOA HÙNG VƯƠNG</strong> - Xã Chí Đám, Huyện Đoan Hùng, Tỉnh Phú Thọ</p>
+      <p style="margin-bottom: 0;">Tổng đài CSKH: 1800 9415 | Cấp cứu 24/7: 0913 529 115</p>
+    </div>
+  </footer>
+
+  <script>
+    // Display the current requested path nicely
+    document.addEventListener('DOMContentLoaded', function() {
+      const path = window.location.pathname;
+      const textEl = document.getElementById('currentPathText');
+      if (textEl) {
+        textEl.textContent = path && path !== '/' ? decodeURIComponent(path) : '/chuyen-muc-dang-phat-trien';
+      }
+    });
+  </script>
+</body>
+</html>
