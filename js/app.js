@@ -31,16 +31,18 @@ document.addEventListener('DOMContentLoaded', function () {
       desktopNavMenu.innerHTML = menuTree.map((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
         const activeClass = index === 0 ? 'active' : '';
+        const title = item.title || item.name || '';
+        const link = item.link || item.url || '#';
         return `
           <li class="nav-item ${activeClass}">
-            <a href="${item.url || '#'}" class="nav-link">
-              <span>${item.name}</span>
+            <a href="${link}" class="nav-link">
+              <span>${title}</span>
               ${hasChildren ? '<i class="ri-arrow-down-s-line arrow-icon"></i>' : ''}
             </a>
             ${hasChildren ? `
               <div class="dropdown-menu">
                 ${item.children.map(child => `
-                  <a href="${child.url || '#'}" class="dropdown-link">${child.name}</a>
+                  <a href="${child.link || child.url || '#'}" class="dropdown-link">${child.title || child.name || ''}</a>
                 `).join('')}
               </div>
             ` : ''}
@@ -53,16 +55,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (mobileNavList) {
       mobileNavList.innerHTML = menuTree.map((item, index) => {
         const hasChildren = item.children && item.children.length > 0;
+        const title = item.title || item.name || '';
+        const link = item.link || item.url || '#';
         return `
           <li class="mobile-nav-item">
             <div class="mobile-nav-link" data-has-children="${hasChildren}" ${hasChildren ? `onclick="toggleMobileSubmenu(this)"` : ''}>
-              <a href="${item.url || '#'}" style="flex:1;">${item.name}</a>
+              <a href="${link}" style="flex:1;">${title}</a>
               ${hasChildren ? '<i class="ri-arrow-down-s-line" style="font-size:1.1rem; transition: transform 0.2s;"></i>' : ''}
             </div>
             ${hasChildren ? `
               <div class="mobile-submenu">
                 ${item.children.map(child => `
-                  <a href="${child.url || '#'}" class="mobile-submenu-link">${child.name}</a>
+                  <a href="${child.link || child.url || '#'}" class="mobile-submenu-link">${child.title || child.name || ''}</a>
                 `).join('')}
               </div>
             ` : ''}
