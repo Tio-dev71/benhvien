@@ -848,6 +848,43 @@
       margin: 0 auto;
     }
 
+    .pacs-thumbnail-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 4px 6px 4px;
+      margin-top: 12px;
+      max-width: 100%;
+      justify-content: center;
+      scrollbar-width: thin;
+    }
+
+    .pacs-thumb-item {
+      width: 54px;
+      height: 54px;
+      border-radius: 6px;
+      border: 2px solid #334155;
+      cursor: pointer;
+      object-fit: cover;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      background: #000;
+    }
+
+    .pacs-thumb-item:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      border-color: #38bdf8;
+    }
+
+    .pacs-thumb-item.active {
+      opacity: 1;
+      border-color: #0284c7;
+      box-shadow: 0 0 8px rgba(2, 132, 199, 0.6);
+      transform: scale(1.05);
+    }
+
     /* Print styles */
     @media print {
       .top-bar, .main-header, .nav-bar, .site-footer, .breadcrumb-row, .portal-mode-banner, .patient-header-actions {
@@ -1937,6 +1974,19 @@
 
     // Image Modal Control
     let currentXrayTab = 1;
+    let currentUltrasoundTab = 1;
+    let currentEntTab = 1;
+
+    const entImages = [
+      { id: 1, path: '/public/anhcuabacsiLoThiXuan.png?v=2', altPath: '/anhcuabacsiLoThiXuan.png?v=2', label: 'Hình 1' },
+      { id: 2, path: '/public/anhcuabacsiLoThiXuan2.png?v=2', altPath: '/anhcuabacsiLoThiXuan2.png?v=2', label: 'Hình 2' },
+      { id: 3, path: '/public/anhcuabacsiLoThiXuan3.png?v=2', altPath: '/anhcuabacsiLoThiXuan3.png?v=2', label: 'Hình 3' },
+      { id: 4, path: '/public/anhcuabacsiLoThiXuan4.png?v=2', altPath: '/anhcuabacsiLoThiXuan4.png?v=2', label: 'Hình 4' },
+      { id: 5, path: '/public/anhcuabacsiLoThiXuan5.png?v=2', altPath: '/anhcuabacsiLoThiXuan5.png?v=2', label: 'Hình 5' },
+      { id: 6, path: '/public/anhcuabacsiLoThiXuan6.png?v=2', altPath: '/anhcuabacsiLoThiXuan6.png?v=2', label: 'Hình 6' },
+      { id: 7, path: '/public/anhcuabacsiLoThiXuan7.png?v=2', altPath: '/anhcuabacsiLoThiXuan7.png?v=2', label: 'Hình 7' },
+      { id: 8, path: '/public/anhcuabacsiLoThiXuan8.png?v=2', altPath: '/anhcuabacsiLoThiXuan8.png?v=2', label: 'Hình 8' }
+    ];
 
     function switchXrayModalTab(tabIndex) {
       currentXrayTab = tabIndex;
@@ -1961,6 +2011,63 @@
       }
     }
 
+    function switchUltrasoundModalTab(tabIndex) {
+      currentUltrasoundTab = tabIndex;
+      const btn1 = document.getElementById('btnTabUs1');
+      const btn2 = document.getElementById('btnTabUs2');
+      const img1 = document.getElementById('imgUs1');
+      const img2 = document.getElementById('imgUs2');
+      const btnOpenTab = document.getElementById('btnOpenFullImageUs');
+
+      if (tabIndex === 1) {
+        btn1?.classList.add('active');
+        btn2?.classList.remove('active');
+        if (img1) img1.style.display = 'block';
+        if (img2) img2.style.display = 'none';
+        if (btnOpenTab) btnOpenTab.href = '/public/anhcuabacsiTaThiHa.png?v=2';
+      } else {
+        btn2?.classList.add('active');
+        btn1?.classList.remove('active');
+        if (img1) img1.style.display = 'none';
+        if (img2) img2.style.display = 'block';
+        if (btnOpenTab) btnOpenTab.href = '/public/anhcuabacsiTaThiHa2.png?v=2';
+      }
+    }
+
+    function switchEntModalTab(tabIndex) {
+      if (tabIndex < 1) tabIndex = 1;
+      if (tabIndex > 8) tabIndex = 8;
+      currentEntTab = tabIndex;
+
+      for (let i = 1; i <= 8; i++) {
+        const btn = document.getElementById(`btnTabEnt${i}`);
+        const img = document.getElementById(`imgEnt${i}`);
+        const thumb = document.getElementById(`thumbEnt${i}`);
+        if (i === tabIndex) {
+          btn?.classList.add('active');
+          thumb?.classList.add('active');
+          if (img) img.style.display = 'block';
+        } else {
+          btn?.classList.remove('active');
+          thumb?.classList.remove('active');
+          if (img) img.style.display = 'none';
+        }
+      }
+
+      const counter = document.getElementById('entCounterText');
+      if (counter) counter.textContent = `Hình ${tabIndex}/8`;
+
+      const btnOpenTab = document.getElementById('btnOpenFullImageEnt');
+      const item = entImages[tabIndex - 1];
+      if (btnOpenTab && item) {
+        btnOpenTab.href = item.path;
+      }
+    }
+
+    function stepEntModalTab(delta) {
+      switchEntModalTab(currentEntTab + delta);
+    }
+
     function openImageModal(type, title) {
       const modal = document.getElementById('imageModal');
       const modalTitle = document.getElementById('imageModalTitle');
@@ -1969,8 +2076,17 @@
       if (modalTitle) modalTitle.textContent = title || 'Kết quả hình ảnh cận lâm sàng';
 
       if (type === 'ultrasound') {
+        currentUltrasoundTab = 1;
         graphic.innerHTML = `
           <div style="width: 100%;">
+            <div class="modal-tab-bar">
+              <button class="modal-tab-btn active" id="btnTabUs1" onclick="switchUltrasoundModalTab(1)">
+                <i class="ri-image-line"></i> Mặt cắt siêu âm 1 (1/2)
+              </button>
+              <button class="modal-tab-btn" id="btnTabUs2" onclick="switchUltrasoundModalTab(2)">
+                <i class="ri-image-line"></i> Mặt cắt siêu âm 2 (2/2)
+              </button>
+            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
               <span style="color: #0284c7; font-weight: 700; font-size: 0.95rem;">
                 <i class="ri-user-star-line me-1"></i> Bác sĩ đọc kết quả: Tạ Thị Hà
@@ -1980,43 +2096,86 @@
               </span>
             </div>
             <div class="pacs-viewer-frame">
-              <img src="/public/anhcuabacsiTaThiHa.png?v=2"
+              <img id="imgUs1"
+                   src="/public/anhcuabacsiTaThiHa.png?v=2"
                    onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiTaThiHa.png?v=2';}"
-                   alt="Siêu âm ổ bụng - BS Tạ Thị Hà"
+                   alt="Siêu âm ổ bụng - Mặt cắt 1 - BS Tạ Thị Hà"
                    class="pacs-img-preview" />
+              <img id="imgUs2"
+                   src="/public/anhcuabacsiTaThiHa2.png?v=2"
+                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiTaThiHa2.png?v=2';}"
+                   alt="Siêu âm ổ bụng - Mặt cắt 2 - BS Tạ Thị Hà"
+                   class="pacs-img-preview"
+                   style="display: none;" />
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
               <span style="color: #16a34a; font-size: 0.88rem; font-weight: 600;">
-                <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Đã đồng bộ & xác thực từ máy siêu âm SAMSUNG
+                <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Đã đồng bộ & xác thực từ máy siêu âm SAMSUNG (2 hình ảnh)
               </span>
-              <a href="/public/anhcuabacsiTaThiHa.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
+              <a id="btnOpenFullImageUs" href="/public/anhcuabacsiTaThiHa.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
                 <i class="ri-external-link-line"></i> Mở ảnh gốc kích thước lớn
               </a>
             </div>
           </div>
         `;
       } else if (type === 'ent') {
+        currentEntTab = 1;
         graphic.innerHTML = `
           <div style="width: 100%;">
+            <div class="modal-tab-bar" style="margin-bottom: 10px;">
+              <button class="modal-tab-btn" onclick="stepEntModalTab(-1)" style="padding: 6px 12px;">
+                <i class="ri-arrow-left-s-line"></i> Trước
+              </button>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
+                ${entImages.map(img => `
+                  <button class="modal-tab-btn ${img.id === 1 ? 'active' : ''}" id="btnTabEnt${img.id}" onclick="switchEntModalTab(${img.id})" style="padding: 6px 12px; font-size: 0.82rem;">
+                    ${img.label}
+                  </button>
+                `).join('')}
+              </div>
+              <button class="modal-tab-btn" onclick="stepEntModalTab(1)" style="padding: 6px 12px;">
+                Sau <i class="ri-arrow-right-s-line"></i>
+              </button>
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
               <span style="color: #0284c7; font-weight: 700; font-size: 0.95rem;">
-                <i class="ri-user-star-line me-1"></i> Bác sĩ đọc kết quả: Lò Thị Xuân
+                <i class="ri-user-star-line me-1"></i> Bác sĩ đọc kết quả: Lò Thị Xuân (<span id="entCounterText" style="color: #0369a1; font-weight: 800;">Hình 1/8</span>)
               </span>
               <span style="color: #64748b; font-size: 0.88rem;">
                 <i class="ri-calendar-line me-1"></i> Ngày thực hiện: 09/10/2026 16:21
               </span>
             </div>
+
             <div class="pacs-viewer-frame">
-              <img src="/public/anhcuabacsiLoThiXuan.png?v=2"
-                   onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='/anhcuabacsiLoThiXuan.png?v=2';}"
-                   alt="Nội soi Tai Mũi Họng - BS Lò Thị Xuân"
-                   class="pacs-img-preview" />
+              ${entImages.map(img => `
+                <img id="imgEnt${img.id}"
+                     src="${img.path}"
+                     onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='${img.altPath}';}"
+                     alt="Nội soi Tai Mũi Họng - Hình ${img.id} - BS Lò Thị Xuân"
+                     class="pacs-img-preview"
+                     style="${img.id === 1 ? '' : 'display: none;'}" />
+              `).join('')}
             </div>
+
+            <!-- Thumbnail strip -->
+            <div class="pacs-thumbnail-strip">
+              ${entImages.map(img => `
+                <img src="${img.path}"
+                     id="thumbEnt${img.id}"
+                     class="pacs-thumb-item ${img.id === 1 ? 'active' : ''}"
+                     onclick="switchEntModalTab(${img.id})"
+                     onerror="if(!this.dataset.retried){this.dataset.retried=true;this.src='${img.altPath}';}"
+                     alt="Hình ${img.id}"
+                     title="Hình ${img.id}" />
+              `).join('')}
+            </div>
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
               <span style="color: #16a34a; font-size: 0.88rem; font-weight: 600;">
-                <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Máy nội soi HD Pentax Medical
+                <i class="ri-checkbox-circle-fill"></i> Hệ thống PACS - Máy nội soi HD Pentax Medical (Đã tải 8 hình ảnh)
               </span>
-              <a href="/public/anhcuabacsiLoThiXuan.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
+              <a id="btnOpenFullImageEnt" href="/public/anhcuabacsiLoThiXuan.png?v=2" target="_blank" class="app-link-blue" style="font-size: 0.9rem;">
                 <i class="ri-external-link-line"></i> Mở ảnh gốc kích thước lớn
               </a>
             </div>
